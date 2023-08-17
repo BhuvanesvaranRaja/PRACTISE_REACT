@@ -1,8 +1,10 @@
 import "./App.css";
 import React from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
 import { ThemeProvider } from "styled-components";
 import NavBar from "./Components/NavBar/NavBar";
 import AppRoutes from "./Routes/AppRoutes";
+// import Button from "react-bootstrap/Button";
 
 function App() {
   const theme = {
@@ -23,6 +25,7 @@ function App() {
         <NavBar />
         <AppRoutes />
       </ThemeProvider>
+      {/* <button>this is bootstrap button</button> */}
     </>
   );
 }

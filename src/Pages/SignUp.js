@@ -1,146 +1,165 @@
 import React, { Component } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import FromError from "../Components/Form/FromError";
-import "../App.css";
 import * as Yup from "yup";
-class SignUp extends Component {
-  handleSubmit = (values, { setSubmitting, resetForm }) => {
-    setTimeout(() => {
-      console.log("inside submit", setSubmitting);
-      console.log("Simulating API call...");
-      console.log("Form Values:", values);
-      console.log("submitted...");
-      setSubmitting(false);
-      resetForm();
-    }, 2000);
-  };
+
+class SignUpForm extends Component {
   render() {
-    // VALIDATION RULES
     const validationSchema = Yup.object({
-      name: Yup.string().required("Name is Required"),
+      name: Yup.string().required("Name is required"),
       email: Yup.string()
-        .email("Invalid Email Format")
-        .required("Email is Required"),
-      password: Yup.string().required("Password is Required"),
-      RePass: Yup.string()
+        .email("Invalid email format")
+        .required("Email is required"),
+      password: Yup.string().required("Password is required"),
+      confirmPassword: Yup.string()
         .oneOf([Yup.ref("password"), null], "Passwords must match")
-        .required("Please re-enter your password"),
-      mobile: Yup.string()
+        .required("Confirm Password is required"),
+      phoneNumber: Yup.string()
         .min(10, "Must be at least 10 digits")
-        .matches(/^[0-9]+$/, "Must be only digits")
-        .required("Mobile Number is required"),
-      social: Yup.object({
-        whatsapp: Yup.string()
-          .min(10, "Must be at least 10 digits")
-          .matches(/^[0-9]+$/, "Must be only digits")
-          .required("WhatsApp Number is required"),
-        linkedln: Yup.string().required("Enter your LinkedIn URL"),
-      }),
+        .matches(/^\d+$/, "Phone number must be digits only")
+        .required("Phone Number is required"),
+      address: Yup.string().required("Address is required"),
+      city: Yup.string().required("City is required"),
+      country: Yup.string().required("Country is required"),
     });
 
     return (
-      <div>
-        <div className="form-container">
-          <Formik
-            initialValues={{
-              name: "",
-              email: "",
-              password: "",
-              RePass: "",
-              mobile: "",
-              social: {
-                whatsapp: "",
-                linkedln: "",
-              },
-            }}
-            validationSchema={validationSchema}
-            onSubmit={this.handleSubmit}>
-            {({ isSubmitting }) => (
-              <Form className="transparent-form">
-                {" "}
-                {/* Apply transparency to the form */}
-                <h4>REGISTER HERE</h4>
-                <div className="form-group">
-                  <label htmlFor="name">NAME </label>
-                  <Field type="text" name="name" id="name" />
-                  <ErrorMessage
-                    name="name"
-                    component={FromError}
-                    className="error"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="email">EMAIL </label>
-                  <Field type="email" name="email" id="email" />
-                  <ErrorMessage
-                    name="email"
-                    component={FromError}
-                    className="error"
-                  />
-                </div>
-                <div className="Password_wrapper form-group">
-                  <div>
-                    <label htmlFor="password">PASSWORD </label>
-                    <Field type="password" name="password" id="password" />
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="col-md-6">
+            <Formik
+              initialValues={{
+                name: "",
+                email: "",
+                password: "",
+                confirmPassword: "",
+                phoneNumber: "",
+                address: "",
+                city: "",
+                country: "",
+              }}
+              validationSchema={validationSchema}
+              onSubmit={(values, actions) => {
+                setTimeout(() => {
+                  console.log("Form Values:", values);
+                  actions.setSubmitting(false);
+                }, 1000);
+                // actions.resetForm();
+              }}>
+              {({ isSubmitting }) => (
+                <Form>
+                  <h4 className="mb-4 mt-4 text-danger">Registration Form</h4>
+                  <div className="form-group">
+                    <label htmlFor="name">Name</label>
+                    <Field type="text" name="name" className="form-control" />
                     <ErrorMessage
-                      name="password"
-                      component={FromError}
-                      className="error"
+                      name="name"
+                      component="div"
+                      className="text-danger"
                     />
                   </div>
-                  <div>
-                    <label htmlFor="RePass">RE-ENTER PASS </label>
-                    <Field type="password" name="RePass" id="RePass" />
+                  <div className="form-group">
+                    <label htmlFor="email">Email</label>
+                    <Field type="email" name="email" className="form-control" />
                     <ErrorMessage
-                      name="RePass"
-                      component={FromError}
-                      className="error"
+                      name="email"
+                      component="div"
+                      className="text-danger"
                     />
                   </div>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="mobile">MOBILE</label>
-                  <Field type="number" name="mobile" id="mobile" />
-                  <ErrorMessage
-                    name="mobile"
-                    component={FromError}
-                    className="error"
-                  />
-                </div>
-                <div className="Social form-group">
-                  <div>
-                    <label htmlFor="whatsapp">WHATSAPP NO</label>
-                    <Field type="number" name="social.whatsapp" id="whatsapp" />
-                    <ErrorMessage
-                      name="social.whatsapp"
-                      component={FromError}
-                      className="error"
-                    />
+                  <div className="form-group row">
+                    <div className="col-md-6">
+                      <label htmlFor="password">Password</label>
+                      <Field
+                        type="password"
+                        name="password"
+                        className="form-control"
+                      />
+                      <ErrorMessage
+                        name="password"
+                        component="div"
+                        className="text-danger"
+                      />
+                    </div>
+                    <div className="col-md-6">
+                      <label htmlFor="confirmPassword">Confirm Password</label>
+                      <Field
+                        type="password"
+                        name="confirmPassword"
+                        className="form-control"
+                      />
+                      <ErrorMessage
+                        name="confirmPassword"
+                        component="div"
+                        className="text-danger"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <label htmlFor="linkedln">LINKEDIN </label>
-                    <Field type="url" name="social.linkedln" id="linkedln" />
-                    <ErrorMessage
-                      name="social.linkedln"
-                      component={FromError}
-                      className="error"
-                    />
+                  <div className="form-group row">
+                    <div className="col-md-6">
+                      <label htmlFor="phoneNumber">Phone Number</label>
+                      <Field
+                        type="text"
+                        name="phoneNumber"
+                        className="form-control"
+                      />
+                      <ErrorMessage
+                        name="phoneNumber"
+                        component="div"
+                        className="text-danger"
+                      />
+                    </div>
+                    <div className="col-md-6">
+                      <label htmlFor="address">Address</label>
+                      <Field
+                        type="text"
+                        name="address"
+                        className="form-control"
+                      />
+                      <ErrorMessage
+                        name="address"
+                        component="div"
+                        className="text-danger"
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="form-group">
+                  <div className="form-group row">
+                    <div className="col-md-6">
+                      <label htmlFor="city">City</label>
+                      <Field type="text" name="city" className="form-control" />
+                      <ErrorMessage
+                        name="city"
+                        component="div"
+                        className="text-danger"
+                      />
+                    </div>
+                    <div className="col-md-6">
+                      <label htmlFor="country">Country</label>
+                      <Field
+                        type="text"
+                        name="country"
+                        className="form-control"
+                      />
+                      <ErrorMessage
+                        name="country"
+                        component="div"
+                        className="text-danger"
+                      />
+                    </div>
+                  </div>
                   <button
-                    type="submit "
-                    className={isSubmitting ? "disabled-button" : ""}
+                    type="submit"
+                    className="btn btn-primary"
                     disabled={isSubmitting}>
-                    SUBMIT
+                    {isSubmitting ? "Submitting..." : "Submit"}
                   </button>
-                </div>
-              </Form>
-            )}
-          </Formik>
+                </Form>
+              )}
+            </Formik>
+          </div>
         </div>
       </div>
     );
   }
 }
-export default SignUp;
+
+export default SignUpForm;
