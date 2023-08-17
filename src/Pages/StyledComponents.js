@@ -3,8 +3,8 @@ import StyledButton, {
   GetStarted,
   SubmitButton,
   ThemeProviderComp,
-} from "./StyleComponents/Button";
-import Container from "./StyleComponents/container.style";
+} from "../Components/StyleComponents/Button";
+import Container from "../Components/StyleComponents/container.style";
 
 export default class StyledComponents extends Component {
   render() {

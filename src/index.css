@@ -11,7 +11,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-form {
+/* form {
   display: grid;
   place-items: center;
   width: 100%;
@@ -35,4 +35,4 @@ form button {
   color: white;
   border: none;
   padding: 10px;
-}
+} */

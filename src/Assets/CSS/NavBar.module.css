@@ -2,7 +2,7 @@
   background-color: aqua;
   height: 40px;
   display: flex;
-  /* justify-content: center; */
+  padding-left: 100px;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
 }

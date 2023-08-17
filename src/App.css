@@ -1,3 +1,89 @@
+/* Form Styles */
+.form-container {
+  background-color: #f37a7a;
+  border-radius: 10px;
+  padding: 50px 30%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  margin: 5% auto;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 1px;
+  display: block;
+  margin-bottom: 5px;
+}
+
+input,
+button {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #ccc;
+}
+
+button {
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
 .error {
   color: red;
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+/* Password and Re-Password Styles */
+.Password_wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+}
+
+.Password_wrapper div {
+  margin-bottom: 10px;
+}
+
+/* Social Styles */
+.Social {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+}
+
+.Social div {
+  margin-bottom: 10px;
+}
+.disabled-button {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.transparent-form {
+  background-color: rgba(
+    61,
+    22,
+    22,
+    0.8
+  ); /* Use an rgba color with alpha to make the form transparent */
+  padding: 50px; /* Add some padding for better visibility */
+  border-radius: 10px; /* Add rounded corners to the form */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+  color: white;
+}
+
+/* Responsive Styles */
+@media (max-width: 500px) {
+  .form-container {
+    width: 90%;
+  }
 }
