@@ -1,15 +1,18 @@
 import React, { Component } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-class FromError extends Component {
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+
+export default class FromError extends Component {
   render() {
     return (
-      <div>
-        <span style={{ color: "red", textAlign: "center" }}>
-          {this.props.children} !!
-        </span>
+      <div style={{ color: "red", marginTop: "2px", marginRight: "2px" }}>
+        <FontAwesomeIcon
+          icon={faExclamationTriangle}
+          style={{ marginRight: "5px", fontSize: "13px" }}
+        />
+        {this.props.children}{" "}
       </div>
     );
   }
 }
-
-export default FromError;

@@ -1,6 +1,6 @@
 import "./App.css";
 import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
+// import "bootstrap/dist/css/bootstrap.min.css";
 import { ThemeProvider } from "styled-components";
 import NavBar from "./Components/NavBar/NavBar";
 import AppRoutes from "./Routes/AppRoutes";
