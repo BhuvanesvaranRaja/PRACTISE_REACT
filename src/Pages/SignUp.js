@@ -1,25 +1,27 @@
 import React, { Component } from "react";
-import { Formik, Form } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import FormikContainer from "../Components/Form/FormikContainer";
 import { Container, Row, Col } from "react-bootstrap";
-
+import AgeFieldComponent from "../Components/Form/AgeComponent";
 export default class SignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      copyPrimaryToSecondary: false, // State to track checkbox status
+      sameAsPrimary: false,
     };
   }
-  handleCheckboxChange = (e) => {
-    this.setState({ copyPrimaryToSecondary: e.target.checked });
+  handleSameAsPrimaryChange = () => {
+    this.setState((prevState) => ({
+      sameAsPrimary: !prevState.sameAsPrimary,
+    }));
   };
   render() {
     const DropCountryOptions = [
       { key: "Select an Option", value: "" },
-      { key: "India", value: "ABC" },
-      { key: "America", value: "DEF" },
-      { key: "Africa", value: "GHI" },
+      { key: "India", value: "India" },
+      { key: "America", value: "America" },
+      { key: "Africa", value: "Africa" },
     ];
     const DropStateOptions = [
       { key: "Select an Option", value: "" },
@@ -42,29 +44,39 @@ export default class SignUp extends Component {
       { key: "Photography", value: "Photography" },
       { key: "Editing", value: "Editing" },
       { key: "Arts", value: "Arts" },
+      { key: "Sports", value: "Sports" },
+      { key: "Dance", value: "Dance" },
+      { key: "Designing", value: "Designing" },
+      { key: "Singing", value: "Singing" },
+      { key: "Gymnastics", value: "Gymnastics" },
     ];
     const initialValues = {
       name: "",
       lastname: "",
       email: "",
       username: "",
+      password: "",
+      repassword: "",
+      birthDate: null,
+      age: "",
+      phoneNumber: "",
+      radioOption: "",
+      address1: "",
+      address2: "",
+      landmark: "",
+      pincode: "",
       selectCountryOption: "",
       selectStateOption: "",
       selectDistrictOption: "",
-      radioOption: "",
-      repassword: "",
-      password: "",
-      birthDate: null,
       CheckOptions: [],
-      address1: "",
-      address2: "",
       secaddress1: "",
       secaddress2: "",
       seclandmark: "",
       secpincode: "",
-      pincode: "",
-      landmark: "",
-      phoneNumber: "",
+      secselectDistrictOption: "",
+      secselectStateOption: "",
+      secselectCountryOption: "",
+      acceptTerms: "",
     };
     const validationSchema = Yup.object({
       name: Yup.string().required("Name is required"),
@@ -75,6 +87,10 @@ export default class SignUp extends Component {
           /^[a-zA-Z0-9]*$/,
           "Username cannot contain special characters"
         ),
+      phoneNumber: Yup.string()
+        .min(10, "Invalid No")
+        .matches(/^[6-9]\d{9}$/, "Invalid Number")
+        .required("Number is required"),
       email: Yup.string()
         .email("Invalid email format")
         .required("Email is required"),
@@ -90,21 +106,23 @@ export default class SignUp extends Component {
       CheckOptions: Yup.array()
         .min(1, "Select any value")
         .required("Select any value"),
-      address1: Yup.string().required("Address is required"),
-      address2: Yup.string().required("Address is required"),
+      address1: Yup.string().required("Address1 is required"),
+      address2: Yup.string().required("Address2 is required"),
       landmark: Yup.string().required("LandMark is required"),
       pincode: Yup.string()
         .required("Pincode is required")
-        .max(6, "Incorrect Pincode"),
-      secaddress1: Yup.string().required("Address is required"),
-      secaddress2: Yup.string().required("Address is required"),
-      seclandmark: Yup.string().required("Address is required"),
-      secpincode: Yup.string().required("Address is required"),
-
-      phoneNumber: Yup.string()
-        .min(10, "Must be at least 10 digits")
-        .matches(/^\d+$/, "Phone number must be digits only")
-        .required("Phone Number is required"),
+        .max(6, "Incorrect Pincode")
+        .min(6, "Incorrect Pincode"),
+      secaddress1: Yup.string().required("Address1 is required"),
+      secaddress2: Yup.string().required("Address2 is required"),
+      seclandmark: Yup.string().required("Landmark is required"),
+      secpincode: Yup.string().required("Pincode is required"),
+      secselectDistrictOption: Yup.string().required("Select the District"),
+      secselectCountryOption: Yup.string().required("Select the country"),
+      secselectStateOption: Yup.string().required("Select the State"),
+      acceptTerms: Yup.bool()
+        .oneOf([true], "You must accept the terms and conditions")
+        .required("You must accept the terms and conditions"),
     });
     const onSubmit = (values, actions) => {
       setTimeout(() => {
@@ -123,282 +141,382 @@ export default class SignUp extends Component {
         actions.resetForm();
       }, 1000);
     };
+    const localStorageData =
+      JSON.parse(localStorage.getItem("FORM_DATA")) || [];
+
+    const dropdownOptions = localStorageData.map((data) => ({
+      username: data.username,
+      name: data.name,
+    }));
+
     return (
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={onSubmit}>
-        {({ isSubmitting }) => (
-          <Form>
-            <Container className="border p-5 mt-3 ">
-              <p className="mt-2">PERSONAL DETAILS</p>
-              <hr />
-              {/* name and last name */}
-              <Row>
-                <Col md={7}>
-                  <div className="form-group mb-2">
-                    <div className="form-group">
+      <>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={onSubmit}>
+          {({ isSubmitting, values, handleChange }) => (
+            <Form>
+              <h3 className="container mt-4 text-bg-danger ">REGISTER HERE</h3>
+
+              <Container className="border p-5 mt-3 ">
+                <p className=" text-dark fw-bold ">PERSONAL DETAILS</p>
+                <hr />
+                {/* name and last name */}
+                <Row>
+                  <Col md={7}>
+                    <div className="form-group mb-2">
+                      <div className="form-group">
+                        <FormikContainer
+                          control="input"
+                          type="text"
+                          name="name"
+                          id="name"
+                          label="FIRST NAME"
+                        />
+                      </div>
+                    </div>
+                  </Col>
+                  <Col md={5}>
+                    <div className="form-group mb-2">
                       <FormikContainer
                         control="input"
                         type="text"
-                        name="name"
-                        id="name"
-                        label="FIRST NAME"
+                        name="lastname"
+                        id="lastname"
+                        label="LAST NAME"
                       />
                     </div>
-                  </div>
-                </Col>
-                <Col md={5}>
-                  <div className="form-group mb-2">
+                  </Col>
+                </Row>
+                {/* mail */}
+                <Row>
+                  <Col md={7}>
+                    <FormikContainer
+                      control="input"
+                      type="mail"
+                      name="email"
+                      id="email"
+                      label="EMAIL"
+                    />
+                  </Col>
+                  <Col md={5}>
                     <FormikContainer
                       control="input"
                       type="text"
-                      name="lastname"
-                      id="lastname"
-                      label="Last Name"
+                      name="username"
+                      id="username"
+                      label="USER NAME"
                     />
-                  </div>
-                </Col>
-              </Row>
-              {/* mail */}
-              <Row>
-                <Col md={7}>
-                  <FormikContainer
-                    control="input"
-                    type="mail"
-                    name="email"
-                    id="email"
-                    label="EMAIL"
+                  </Col>
+                </Row>
+                {/* password and repass */}
+                <Row>
+                  <Col md={6}>
+                    <FormikContainer
+                      control="input"
+                      type="password"
+                      name="password"
+                      id="password"
+                      label="PASSWORD"
+                    />
+                  </Col>
+                  <Col md={6}>
+                    <FormikContainer
+                      control="input"
+                      type="password"
+                      name="repassword"
+                      id="repassword"
+                      label="RE ENTER PASSWORD"
+                    />
+                  </Col>
+                </Row>
+                {/* DOB and Mobile */}
+                <Row>
+                  <Col md={2}>
+                    <FormikContainer
+                      control="date"
+                      name="birthDate"
+                      label="DOB"
+                    />
+                  </Col>
+                  <Col md={2}>
+                    <AgeFieldComponent name="age" label="AGE" />
+                  </Col>
+                  <Col md={3}>
+                    <FormikContainer
+                      control="input"
+                      type="number"
+                      name="phoneNumber"
+                      id="phoneNumber"
+                      label="MOBILE NO"
+                    />
+                  </Col>
+                  <Col md={5}>
+                    <FormikContainer
+                      control="radio"
+                      name="radioOption"
+                      label="GENDER"
+                      options={radioOptions}
+                    />
+                  </Col>
+                </Row>
+                <p className="mt-3 text-dark fw-bold">PRIMARY ADDRESS</p>
+                <hr />
+                <Row>
+                  <Col md={6}>
+                    <FormikContainer
+                      control="input"
+                      type="text"
+                      name="address1"
+                      id="address1"
+                      label="ADDRESS LINE 1"
+                    />
+                  </Col>
+                  <Col md={6}>
+                    <FormikContainer
+                      control="input"
+                      type="text"
+                      name="address2"
+                      id="address2"
+                      label="ADDRESS LINE 2"
+                    />
+                  </Col>
+                  <Col md={6}>
+                    <FormikContainer
+                      control="input"
+                      type="text"
+                      name="landmark"
+                      id="landmark"
+                      label="LANDMARK"
+                    />
+                  </Col>
+                  <Col md={6}>
+                    <FormikContainer
+                      control="input"
+                      type="number"
+                      name="pincode"
+                      id="pincode"
+                      label="PIN CODE"
+                    />
+                  </Col>
+                </Row>
+                {/* country state district pincode */}
+                <Row>
+                  <Col md={4}>
+                    <FormikContainer
+                      control="select"
+                      name="selectDistrictOption"
+                      label="DISTRICT"
+                      options={DropDistrictOptions}
+                    />
+                  </Col>
+                  <Col md={4}>
+                    <FormikContainer
+                      control="select"
+                      name="selectStateOption"
+                      label="STATE"
+                      options={DropStateOptions}
+                    />
+                  </Col>
+                  <Col md={4}>
+                    <FormikContainer
+                      control="select"
+                      name="selectCountryOption"
+                      label="COUNTRY"
+                      options={DropCountryOptions}
+                    />
+                  </Col>
+                </Row>
+                <p className="mt-3 text-dark fw-bold">SECONDRY ADDRESS</p>
+                <hr />
+                <Row>
+                  <Col md={6}>
+                    <FormikContainer
+                      control="input"
+                      type="text"
+                      name="secaddress1"
+                      id="secaddress1"
+                      label="ADDRESS LINE 1"
+                      value={
+                        this.state.sameAsPrimary
+                          ? values.address1
+                          : values.secaddress1
+                      }
+                      disabled={this.state.sameAsPrimary}
+                    />
+                  </Col>
+                  <Col md={6}>
+                    <FormikContainer
+                      control="input"
+                      type="text"
+                      name="secaddress2"
+                      id="secaddress2"
+                      label="ADDRESS LINE 2"
+                      value={
+                        this.state.sameAsPrimary
+                          ? values.address2
+                          : values.secaddress2
+                      }
+                      disabled={this.state.sameAsPrimary}
+                    />
+                  </Col>
+                  <Col md={6}>
+                    <FormikContainer
+                      control="input"
+                      type="text"
+                      name="seclandmark"
+                      id="seclandmark"
+                      label="LANDMARK"
+                      value={
+                        this.state.sameAsPrimary
+                          ? values.landmark
+                          : values.seclandmark
+                      }
+                      disabled={this.state.sameAsPrimary}
+                    />
+                  </Col>
+                  <Col md={6}>
+                    <FormikContainer
+                      control="input"
+                      type="number"
+                      name="secpincode"
+                      id="secpincode"
+                      label="PIN CODE"
+                      value={
+                        this.state.sameAsPrimary
+                          ? values.pincode
+                          : values.secpincode
+                      }
+                      disabled={this.state.sameAsPrimary}
+                    />
+                  </Col>
+                </Row>
+                {/* country state district pincode */}
+                <Row>
+                  <Col md={4}>
+                    <FormikContainer
+                      control="select"
+                      name="secselectDistrictOption"
+                      label="DISTRICT"
+                      options={DropDistrictOptions}
+                      value={
+                        this.state.sameAsPrimary
+                          ? values.selectDistrictOption
+                          : values.secselectDistrictOption
+                      }
+                      disabled={this.state.sameAsPrimary}
+                    />
+                  </Col>
+                  <Col md={4}>
+                    <FormikContainer
+                      control="select"
+                      name="secselectStateOption"
+                      label="STATE"
+                      options={DropStateOptions}
+                      value={
+                        this.state.sameAsPrimary
+                          ? values.selectStateOption
+                          : values.secselectStateOption
+                      }
+                      disabled={this.state.sameAsPrimary}
+                    />
+                  </Col>
+                  <Col md={4}>
+                    <FormikContainer
+                      control="select"
+                      name="secselectCountryOption"
+                      label="COUNTRY"
+                      options={DropCountryOptions}
+                      value={
+                        this.state.sameAsPrimary
+                          ? values.selectCountryOption
+                          : values.secselectCountryOption
+                      }
+                      disabled={this.state.sameAsPrimary}
+                    />
+                  </Col>
+                </Row>
+                <label className="text-primary mt-3">
+                  <input
+                    type="checkbox"
+                    className="mx-2 mt-3"
+                    checked={this.state.sameAsPrimary}
+                    onChange={(e) =>
+                      this.setState({ sameAsPrimary: e.target.checked })
+                    }
                   />
-                </Col>
-                <Col md={5}>
-                  <FormikContainer
-                    control="input"
-                    type="text"
-                    name="username"
-                    id="username"
-                    label="USER NAME"
+                  Same as Primary Address
+                </label>
+                <p className="mt-3 text-dark fw-bold">SKILLS</p>
+                <hr />
+                <Row>
+                  <Col md={12}>
+                    <FormikContainer
+                      control="checkbox"
+                      name="CheckOptions"
+                      label="SKILLS"
+                      options={CheckOptions}
+                    />
+                  </Col>
+                </Row>
+                <div className="custom-control custom-checkbox mt-3">
+                  <Field
+                    type="checkbox"
+                    name="acceptTerms"
+                    id="acceptTerms"
+                    className="custom-control-input"
                   />
-                </Col>
-              </Row>
-
-              {/* password and repass */}
-              <Row>
-                <Col md={6}>
-                  <FormikContainer
-                    control="input"
-                    type="password"
-                    name="password"
-                    id="password"
-                    label="PASSWORD"
-                  />
-                </Col>
-                <Col md={6}>
-                  <FormikContainer
-                    control="input"
-                    type="password"
-                    name="repassword"
-                    id="repassword"
-                    label="RE ENTER PASSWORD"
-                  />
-                </Col>
-              </Row>
-              {/* DOB and Mobile */}
-              <Row>
-                <Col md={3}>
-                  <FormikContainer
-                    control="date"
-                    name="birthDate"
-                    label="DOB"
-                  />
-                </Col>
-                <Col md={1}>
-                  <FormikContainer
-                    control="input"
-                    name="age"
-                    id="age"
-                    label="AGE"
-                  />
-                </Col>
-                <Col md={3}>
-                  <FormikContainer
-                    control="input"
-                    type="number"
-                    name="phoneNumber"
-                    id="phoneNumber"
-                    label="MOBILE"
-                  />
-                </Col>
-                <Col md={5}>
-                  <FormikContainer
-                    control="radio"
-                    name="radioOption"
-                    label="GENDER"
-                    options={radioOptions}
-                  />
-                </Col>
-              </Row>
-              <p className="mt-2">PRIMARY ADDRESS</p>
-              <hr />
-              <Row>
-                <Col md={6}>
-                  <FormikContainer
-                    control="input"
-                    type="text"
-                    name="address1"
-                    id="address1"
-                    label="ADDRESS LINE 1"
-                  />
-                </Col>
-                <Col md={6}>
-                  <FormikContainer
-                    control="input"
-                    type="text"
-                    name="address2"
-                    id="address2"
-                    label="ADDRESS LINE 2"
-                  />
-                </Col>
-                <Col md={6}>
-                  <FormikContainer
-                    control="input"
-                    type="text"
-                    name="landmark"
-                    id="landmark"
-                    label="LANDMARK"
-                  />
-                </Col>
-                <Col md={6}>
-                  <FormikContainer
-                    control="input"
-                    type="number"
-                    name="pincode"
-                    id="pincode"
-                    label="PIN CODE"
-                  />
-                </Col>
-              </Row>
-
-              {/* country state district pincode */}
-              <Row>
-                <Col md={4}>
-                  <FormikContainer
-                    control="select"
-                    name="selectDistrictOption"
-                    label="DISTRICT"
-                    options={DropDistrictOptions}
-                  />
-                </Col>
-                <Col md={4}>
-                  <FormikContainer
-                    control="select"
-                    name="selectStateOption"
-                    label="STATE"
-                    options={DropStateOptions}
-                  />
-                </Col>
-                <Col md={4}>
-                  <FormikContainer
-                    control="select"
-                    name="selectCountryOption"
-                    label="COUNTRY"
-                    options={DropCountryOptions}
-                  />
-                </Col>
-              </Row>
-              <p className="mt-4">SECONDRY ADDRESS</p>
-              <hr />
-              <Row>
-                <Col md={6}>
-                  <FormikContainer
-                    control="input"
-                    type="text"
-                    name="secaddress1"
-                    id="secaddress1"
-                    label="ADDRESS LINE 1"
-                  />
-                </Col>
-                <Col md={6}>
-                  <FormikContainer
-                    control="input"
-                    type="text"
-                    name="secaddress2"
-                    id="secaddress2"
-                    label="ADDRESS LINE 2"
-                  />
-                </Col>
-                <Col md={6}>
-                  <FormikContainer
-                    control="input"
-                    type="text"
-                    name="seclandmark"
-                    id="seclandmark"
-                    label="LANDMARK"
-                  />
-                </Col>
-                <Col md={6}>
-                  <FormikContainer
-                    control="input"
-                    type="number"
-                    name="secpincode"
-                    id="secpincode"
-                    label="PIN CODE"
-                  />
-                </Col>
-              </Row>
-              {/* country state district pincode */}
-              <Row>
-                <Col md={4}>
-                  <FormikContainer
-                    control="select"
-                    name="secselectDistrictOption"
-                    label="DISTRICT"
-                    options={DropDistrictOptions}
-                  />
-                </Col>
-                <Col md={4}>
-                  <FormikContainer
-                    control="select"
-                    name="secselectStateOption"
-                    label="STATE"
-                    options={DropStateOptions}
-                  />
-                </Col>
-                <Col md={4}>
-                  <FormikContainer
-                    control="select"
-                    name="secselectCountryOption"
-                    label="COUNTRY"
-                    options={DropCountryOptions}
-                  />
-                </Col>
-              </Row>
-              <label>
-                <input type="checkbox" className="mx-2 mt-4"></input>
-                Same as Primary Address
-              </label>
-              <hr />
-              <Row>
-                <Col md={6}>
-                  <FormikContainer
-                    control="checkbox"
-                    name="secCheckOptions"
-                    label="SKILLS"
-                    options={CheckOptions}
-                  />
-                </Col>
-              </Row>
-
-              <button
-                type="submit"
-                className="btn btn-danger  w-100 mt-4 "
-                disabled={isSubmitting}>
-                {isSubmitting ? "Submitting..." : "Submit"}
-              </button>
-            </Container>
-          </Form>
-        )}
-      </Formik>
+                  <label
+                    className="custom-control-label mx-3"
+                    htmlFor="acceptTerms">
+                    I accept the{" "}
+                    <a
+                      href="http://google.com"
+                      className="text-decoration-none">
+                      terms and conditions
+                    </a>
+                  </label>
+                </div>
+                <ErrorMessage
+                  name="acceptTerms"
+                  component="div"
+                  className="text-danger"
+                />
+                <Row>
+                  <Col md={12}>
+                    <div className="form-group">
+                      <label
+                        htmlFor="userDropdown "
+                        className="form-label mt-3 text-danger fw-bold ">
+                        USERS
+                      </label>
+                      <Field
+                        as="select"
+                        id="userDropdown"
+                        name="userDropdown"
+                        className="form-control text-success">
+                        <option value="">Select an Option</option>
+                        {dropdownOptions.map((option, index) => (
+                          <option key={index} value={option.username}>
+                            {option.name} - @{option.username}
+                          </option>
+                        ))}
+                      </Field>
+                    </div>
+                  </Col>
+                </Row>
+                <button
+                  type="submit"
+                  className="btn btn-danger w-100 mt-4  "
+                  disabled={isSubmitting}>
+                  {isSubmitting ? "Submitting..." : "Submit"}
+                </button>
+              </Container>
+            </Form>
+          )}
+        </Formik>
+      </>
     );
   }
 }

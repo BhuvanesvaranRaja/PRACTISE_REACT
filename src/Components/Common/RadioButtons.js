@@ -5,7 +5,7 @@ export default class RadioButtons extends Component {
   render() {
     const { label, name, options, ...rest } = this.props;
     return (
-      <div className="form-group d-flex gap-4 flex-wrap mt-5">
+      <div className="form-group d-flex gap-4 flex-wrap mt-5 mx-3">
         <label className="text-primary">{label}</label>
         <Field name={name} {...rest}>
           {({ field }) => {
