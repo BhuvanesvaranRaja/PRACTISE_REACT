@@ -1,5 +1,6 @@
 import React from "react";
-import { Field } from "formik";
+import { ErrorMessage, Field } from "formik";
+import FromError from "./FromError";
 
 const AgeFieldComponent = ({ name, label }) => {
   return (
@@ -10,6 +11,7 @@ const AgeFieldComponent = ({ name, label }) => {
       <Field name={name}>
         {({ field }) => <input {...field} className="form-control" readOnly />}
       </Field>
+      <ErrorMessage name={name} component={FromError}></ErrorMessage>
     </div>
   );
 };

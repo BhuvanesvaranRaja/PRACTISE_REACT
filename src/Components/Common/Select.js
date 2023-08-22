@@ -67,3 +67,43 @@ export default class Select extends Component {
 //     );
 //   }
 // }
+
+// import React, { Component } from "react";
+// import Select from "react-select";
+// import { Field, ErrorMessage } from "formik";
+// import FromError from "../Form/FromError";
+
+// export default class SearchableSelect extends Component {
+//   render() {
+//     const { label, name, options, ...rest } = this.props;
+//     const selectOptions = options.map((option) => ({
+//       value: option.value,
+//       label: option.key,
+//     }));
+
+//     return (
+//       <div className="mt-3">
+//         <label className="text-primary" htmlFor={name}>
+//           {label}
+//         </label>
+//         <Field name={name}>
+//           {({ field, form }) => (
+//             <Select
+//               id={name}
+//               className="form-control"
+//               options={selectOptions}
+//               onChange={(selectedOption) =>
+//                 form.setFieldValue(name, selectedOption.value)
+//               }
+//               value={selectOptions.find(
+//                 (option) => option.value === field.value
+//               )}
+//               {...rest}
+//             />
+//           )}
+//         </Field>
+//         <ErrorMessage name={name} component={FromError} />
+//       </div>
+//     );
+//   }
+// }

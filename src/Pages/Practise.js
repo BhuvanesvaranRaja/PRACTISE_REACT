@@ -1,122 +1,128 @@
-import React, { Component } from "react";
+import React from "react";
+import { Formik, Form, Field } from "formik";
+import * as Yup from "yup"; // Import yup for validation
+import "bootstrap/dist/css/bootstrap.min.css";
+import "react-bootstrap-typeahead/css/Typeahead.css";
+import { Typeahead } from "react-bootstrap-typeahead";
 
-class AddressForm extends Component {
-  constructor(props) {
-    super(props);
+const initialValues = {
+  country: "",
+  state: "",
+  district: "",
+};
 
-    this.state = {
-      primaryAddress: {
-        street: "",
-        city: "",
-        state: "",
-        zip: "",
-      },
-      secondaryAddress: {
-        street: "",
-        city: "",
-        state: "",
-        zip: "",
-      },
-    };
-  }
+const validationSchema = Yup.object().shape({
+  country: Yup.string().required("Country is required"),
+  state: Yup.string().required("State is required"),
+  district: Yup.string().required("District is required"),
+});
 
-  handlePrimaryAddressChange = (event) => {
-    const { name, value } = event.target;
-    this.setState((prevState) => ({
-      primaryAddress: {
-        ...prevState.primaryAddress,
-        [name]: value,
+const countries = [
+  {
+    name: "India",
+    states: [
+      {
+        name: "Karnataka",
+        districts: ["District A", "District B", "District C"],
       },
-    }));
+      // ... other states ...
+    ],
+  },
+  {
+    name: "USA",
+    states: [
+      {
+        name: "California",
+        districts: ["District P", "District Q", "District R"],
+      },
+      // ... other states ...
+    ],
+  },
+  // ... other countries ...
+];
+
+const App = () => {
+  const handleSubmit = (values) => {
+    console.log(values);
+    // You can perform additional actions with the form values here
   };
 
-  handleSecondaryAddressChange = (event) => {
-    const { name, value } = event.target;
-    this.setState((prevState) => ({
-      secondaryAddress: {
-        ...prevState.secondaryAddress,
-        [name]: value,
-      },
-    }));
-  };
+  return (
+    <div className="container mt-5">
+      <h1>Form with Formik and Bootstrap Typeahead</h1>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        validationSchema={validationSchema} // Add validation schema
+      >
+        {({ values, handleChange, setFieldValue, errors, touched }) => (
+          <Form>
+            <div className="form-group">
+              <label htmlFor="country">Country</label>
+              <Typeahead
+                id="country"
+                options={countries.map((country) => country.name)}
+                placeholder="Select Country"
+                onChange={(selected) => {
+                  setFieldValue("country", selected[0]);
+                  setFieldValue("state", ""); // Clear selected state
+                  setFieldValue("district", ""); // Clear selected district
+                }}
+                selected={values.country ? [values.country] : []}
+              />
+              {touched.country && errors.country && (
+                <div className="text-danger">{errors.country}</div>
+              )}
+            </div>
 
-  copyPrimaryToSecondary = () => {
-    this.setState((prevState) => ({
-      secondaryAddress: { ...prevState.primaryAddress },
-    }));
-  };
+            <div className="form-group">
+              <label htmlFor="state">State</label>
+              <Typeahead
+                id="state"
+                options={
+                  countries
+                    .find((country) => country.name === values.country)
+                    ?.states.map((state) => state.name) || []
+                }
+                placeholder="Select State"
+                onChange={(selected) => {
+                  setFieldValue("state", selected[0]);
+                  setFieldValue("district", ""); // Clear selected district
+                }}
+                selected={values.state ? [values.state] : []}
+              />
+              {touched.state && errors.state && (
+                <div className="text-danger">{errors.state}</div>
+              )}
+            </div>
 
-  render() {
-    const { primaryAddress, secondaryAddress } = this.state;
+            <div className="form-group">
+              <label htmlFor="district">District</label>
+              <Typeahead
+                id="district"
+                options={
+                  countries
+                    .find((country) => country.name === values.country)
+                    ?.states.find((state) => state.name === values.state)
+                    ?.districts || []
+                }
+                placeholder="Select District"
+                onChange={(selected) => setFieldValue("district", selected[0])}
+                selected={values.district ? [values.district] : []}
+              />
+              {touched.district && errors.district && (
+                <div className="text-danger">{errors.district}</div>
+              )}
+            </div>
 
-    return (
-      <div>
-        <h2>Primary Address</h2>
-        <input
-          type="text"
-          name="street"
-          value={primaryAddress.street}
-          onChange={this.handlePrimaryAddressChange}
-          placeholder="Street"
-        />
-        <input
-          type="text"
-          name="city"
-          value={primaryAddress.city}
-          onChange={this.handlePrimaryAddressChange}
-          placeholder="City"
-        />
-        <input
-          type="text"
-          name="state"
-          value={primaryAddress.state}
-          onChange={this.handlePrimaryAddressChange}
-          placeholder="State"
-        />
-        <input
-          type="text"
-          name="zip"
-          value={primaryAddress.zip}
-          onChange={this.handlePrimaryAddressChange}
-          placeholder="Zip Code"
-        />
+            <button type="submit" className="btn btn-primary">
+              Submit
+            </button>
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
+};
 
-        <h2>Secondary Address</h2>
-        <input
-          type="text"
-          name="street"
-          value={secondaryAddress.street}
-          onChange={this.handleSecondaryAddressChange}
-          placeholder="Street"
-        />
-        <input
-          type="text"
-          name="city"
-          value={secondaryAddress.city}
-          onChange={this.handleSecondaryAddressChange}
-          placeholder="City"
-        />
-        <input
-          type="text"
-          name="state"
-          value={secondaryAddress.state}
-          onChange={this.handleSecondaryAddressChange}
-          placeholder="State"
-        />
-        <input
-          type="text"
-          name="zip"
-          value={secondaryAddress.zip}
-          onChange={this.handleSecondaryAddressChange}
-          placeholder="Zip Code"
-        />
-
-        <button onClick={this.copyPrimaryToSecondary}>
-          Copy Primary to Secondary
-        </button>
-      </div>
-    );
-  }
-}
-
-export default AddressForm;
+export default App;

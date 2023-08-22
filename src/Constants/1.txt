@@ -1,13 +1,9 @@
 import React, { Component } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "react-bootstrap-typeahead/css/Typeahead.css";
-import { Typeahead } from "react-bootstrap-typeahead";
 import * as Yup from "yup";
 import FormikContainer from "../Components/Form/FormikContainer";
 import { Container, Row, Col } from "react-bootstrap";
 import AgeFieldComponent from "../Components/Form/AgeComponent";
-import Multi from "../Constants/Multi";
 export default class SignUp extends Component {
   constructor(props) {
     super(props);
@@ -55,63 +51,7 @@ export default class SignUp extends Component {
       { key: "Singing", value: "Singing" },
       { key: "Gymnastics", value: "Gymnastics" },
     ];
-    // const countries = [
-    //   {
-    //     name: "United States",
-    //     states: [
-    //       {
-    //         name: "California",
-    //         districts: ["Los Angeles", "San Francisco", "San Diego"],
-    //       },
-    //       {
-    //         name: "New York",
-    //         districts: ["New York City", "Buffalo", "Rochester"],
-    //       },
-    //     ],
-    //   },
-    //   {
-    //     name: "India",
-    //     states: [
-    //       {
-    //         name: "Maharashtra",
-    //         districts: ["Mumbai", "Pune", "Nagpur"],
-    //       },
-    //       {
-    //         name: "Karnataka",
-    //         districts: ["Bangalore", "Mysore", "Hubli"],
-    //       },
-    //     ],
-    //   },
-    // ];
-
-    const countries = [
-      {
-        name: "India",
-        states: [
-          {
-            name: "Karnataka",
-            districts: ["District A", "District B", "District C"],
-          },
-          // ... other states ...
-        ],
-      },
-      {
-        name: "USA",
-        states: [
-          {
-            name: "California",
-            districts: ["District P", "District Q", "District R"],
-          },
-          // ... other states ...
-        ],
-      },
-      // ... other countries ...
-    ];
     const initialValues = {
-      country: "",
-      country1: "",
-      state: "",
-      district: "",
       name: "",
       lastname: "",
       email: "",
@@ -140,9 +80,6 @@ export default class SignUp extends Component {
       acceptTerms: "",
     };
     const validationSchema = Yup.object({
-      country: Yup.string().required("Country is required"),
-      state: Yup.string().required("State is required"),
-      district: Yup.string().required("District is required"),
       name: Yup.string().required("Name is required"),
       lastname: Yup.string().required("Last Name is required"),
       username: Yup.string()
@@ -239,21 +176,13 @@ export default class SignUp extends Component {
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={onSubmit}>
-          {({
-            isSubmitting,
-            values,
-            setFieldTouched,
-            setFieldValue,
-            errors,
-            touched,
-          }) => (
+          {({ isSubmitting, values, setFieldTouched, setFieldValue }) => (
             <Form>
               <h3 className="container mt-4 text-bg-danger ">REGISTER HERE</h3>
 
               <Container className="border p-5 mt-3 ">
                 <p className=" text-dark fw-bold ">PERSONAL DETAILS</p>
                 <hr />
-
                 {/* name and last name */}
                 <Row>
                   <Col md={7}>
@@ -394,7 +323,7 @@ export default class SignUp extends Component {
                   </Col>
                 </Row>
                 {/* country state district pincode */}
-                {/* <Row>
+                <Row>
                   <Col md={4}>
                     <FormikContainer
                       control="select"
@@ -419,92 +348,7 @@ export default class SignUp extends Component {
                       options={DropCountryOptions}
                     />
                   </Col>
-                </Row> */}
-                <pre>{JSON.stringify(values, null, 2)}</pre>
-
-                {/* <Row className="mt-3">
-                  <Field
-                    name="country"
-                    component={Multi}
-                    data={countries}
-                    formikProps={formikProps}
-                  />
-                </Row> */}
-                <Row className="mt-3">
-                  <Col md={4}>
-                    <div className="form-group">
-                      <label htmlFor="country" className="text-primary">
-                        COUNTRY
-                      </label>
-                      <Typeahead
-                        id="country"
-                        options={countries.map((country) => country.name)}
-                        placeholder="Select Country"
-                        onChange={(selected) => {
-                          setFieldValue("country", selected[0]);
-                          setFieldValue("state", ""); // Clear selected state
-                          setFieldValue("district", ""); // Clear selected district
-                        }}
-                        selected={values.country ? [values.country] : []}
-                      />
-                      {touched.country && errors.country && (
-                        <div className="text-danger">{errors.country}</div>
-                      )}
-                    </div>
-                  </Col>
-                  <Col md={4}>
-                    {" "}
-                    <div className="form-group">
-                      <label htmlFor="state" className="text-primary">
-                        STATE
-                      </label>
-                      <Typeahead
-                        id="state"
-                        options={
-                          countries
-                            .find((country) => country.name === values.country)
-                            ?.states.map((state) => state.name) || []
-                        }
-                        placeholder="Select State"
-                        onChange={(selected) => {
-                          setFieldValue("state", selected[0]);
-                          setFieldValue("district", ""); // Clear selected district
-                        }}
-                        selected={values.state ? [values.state] : []}
-                      />
-                      {touched.state && errors.state && (
-                        <div className="text-danger">{errors.state}</div>
-                      )}
-                    </div>
-                  </Col>
-                  <Col md={4}>
-                    {" "}
-                    <div className="form-group">
-                      <label htmlFor="district" className="text-primary">
-                        DISTRICT
-                      </label>
-                      <Typeahead
-                        id="district"
-                        options={
-                          countries
-                            .find((country) => country.name === values.country)
-                            ?.states.find(
-                              (state) => state.name === values.state
-                            )?.districts || []
-                        }
-                        placeholder="Select District"
-                        onChange={(selected) =>
-                          setFieldValue("district", selected[0])
-                        }
-                        selected={values.district ? [values.district] : []}
-                      />
-                      {touched.district && errors.district && (
-                        <div className="text-danger">{errors.district}</div>
-                      )}
-                    </div>
-                  </Col>
                 </Row>
-
                 <p className="mt-3 text-dark fw-bold">SECONDRY ADDRESS</p>
                 <hr />
                 <Row>
@@ -570,7 +414,7 @@ export default class SignUp extends Component {
                   </Col>
                 </Row>
                 {/* country state district pincode */}
-                {/* <Row>
+                <Row>
                   <Col md={4}>
                     <FormikContainer
                       control="select"
@@ -612,80 +456,6 @@ export default class SignUp extends Component {
                       }
                       disabled={this.state.sameAsPrimary}
                     />
-                  </Col>
-                </Row> */}
-                <Row className="mt-3">
-                  <Col md={4}>
-                    <div className="form-group">
-                      <label htmlFor="country1" className="text-primary">
-                        COUNTRY
-                      </label>
-                      <Typeahead
-                        id="country1"
-                        options={countries.map((country) => country.name)}
-                        placeholder="Select Country"
-                        onChange={(selected) => {
-                          setFieldValue("country1", selected[0]);
-                          setFieldValue("state1", ""); // Clear selected state
-                          setFieldValue("district1", ""); // Clear selected district
-                        }}
-                        selected={values.country1 ? [values.country1] : []}
-                      />
-                      {touched.country1 && errors.country1 && (
-                        <div className="text-danger">{errors.country1}</div>
-                      )}
-                    </div>
-                  </Col>
-                  <Col md={4}>
-                    {" "}
-                    <div className="form-group">
-                      <label htmlFor="state" className="text-primary">
-                        STATE
-                      </label>
-                      <Typeahead
-                        id="state"
-                        options={
-                          countries
-                            .find((country) => country.name === values.country1)
-                            ?.states.map((state) => state.name) || []
-                        }
-                        placeholder="Select State"
-                        onChange={(selected) => {
-                          setFieldValue("state", selected[0]);
-                          setFieldValue("district", ""); // Clear selected district
-                        }}
-                        selected={values.state ? [values.state] : []}
-                      />
-                      {touched.state && errors.state && (
-                        <div className="text-danger">{errors.state}</div>
-                      )}
-                    </div>
-                  </Col>
-                  <Col md={4}>
-                    {" "}
-                    <div className="form-group">
-                      <label htmlFor="district" className="text-primary">
-                        DISTRICT
-                      </label>
-                      <Typeahead
-                        id="district"
-                        options={
-                          countries
-                            .find((country) => country.name === values.country1)
-                            ?.states.find(
-                              (state) => state.name === values.state1
-                            )?.districts || []
-                        }
-                        placeholder="Select District"
-                        onChange={(selected) =>
-                          setFieldValue("district", selected[0])
-                        }
-                        selected={values.district ? [values.district] : []}
-                      />
-                      {touched.district && errors.district && (
-                        <div className="text-danger">{errors.district}</div>
-                      )}
-                    </div>
                   </Col>
                 </Row>
                 <label className="text-primary mt-3">
@@ -767,7 +537,7 @@ export default class SignUp extends Component {
                   <Col md={12}>
                     <div className="form-group">
                       <label
-                        htmlFor="userDropdown"
+                        htmlFor="userDropdown "
                         className="form-label mt-3 text-danger fw-bold ">
                         USERS
                       </label>
