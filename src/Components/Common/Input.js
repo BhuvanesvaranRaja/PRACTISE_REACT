@@ -3,7 +3,7 @@ import { Field, ErrorMessage } from "formik";
 import FromError from "../Form/FromError";
 export default class Input extends Component {
   render() {
-    const { label, name, type, ...rest } = this.props;
+    const { label, name, type, sameAsPrimary, ...rest } = this.props;
     return (
       <div className="mt-3">
         <label className="text-primary" htmlFor={name}>
@@ -14,7 +14,8 @@ export default class Input extends Component {
           type={type}
           id={name}
           name={name}
-          {...rest}></Field>
+          {...rest}
+        ></Field>
         <ErrorMessage name={name} component={FromError}></ErrorMessage>
       </div>
     );

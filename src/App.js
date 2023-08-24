@@ -1,33 +1,37 @@
-import "./App.css";
-import React from "react";
-// import "bootstrap/dist/css/bootstrap.min.css";
-import { ThemeProvider } from "styled-components";
+import React, { Component } from "react";
 import NavBar from "./Components/NavBar/NavBar";
-import AppRoutes from "./Routes/AppRoutes";
-// import Button from "react-bootstrap/Button";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import SignUp from "./Pages/SignUp";
+import StyledComponents from "./Pages/StyledComponents";
+import HomePage from "./Pages/HomePage";
+import ErrorPage from "./Pages/ErrorPage";
+import Login from "./Pages/Login";
+import PrivateRoute from "./Routes/PrivateRoute";
+import Dashboard from "./Pages/dashboard";
 
-function App() {
-  const theme = {
-    font: {
-      primary: "Courier New",
-      secondry: "Segoe UI",
-    },
-    color: {
-      primary: "gold",
-      secondry: "blue",
-      size: "30px",
-    },
-  };
-
-  return (
-    <>
-      <ThemeProvider theme={theme}>
+class App extends Component {
+  render() {
+    return (
+      <>
         <NavBar />
-        <AppRoutes />
-      </ThemeProvider>
-      {/* <button>this is bootstrap button</button> */}
-    </>
-  );
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/styled" element={<StyledComponents />} />
+          <Route path="*" element={<ErrorPage />} />
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
+        </Routes>
+      </>
+    );
+  }
 }
 
 export default App;
