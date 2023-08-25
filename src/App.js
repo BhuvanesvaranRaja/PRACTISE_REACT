@@ -8,6 +8,7 @@ import ErrorPage from "./Pages/ErrorPage";
 import Login from "./Pages/Login";
 import PrivateRoute from "./Routes/PrivateRoute";
 import Dashboard from "./Pages/dashboard";
+import ScrumComponent from "./Components/ScrumComponent";
 
 class App extends Component {
   render() {
@@ -25,6 +26,14 @@ class App extends Component {
             element={
               <PrivateRoute>
                 <Dashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/dashboard/scrum"
+            element={
+              <PrivateRoute>
+                <ScrumComponent />
               </PrivateRoute>
             }
           />

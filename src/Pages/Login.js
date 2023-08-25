@@ -33,6 +33,7 @@ class SignInForm extends Component {
 
     this.state = {
       isAuthenticated: false,
+      authError: "",
     };
   }
 
@@ -51,7 +52,7 @@ class SignInForm extends Component {
         localStorage.setItem("USERNAME", values.username); // Store the username
       } else {
         console.log("Authentication failed");
-        alert("invalid Username and password");
+        this.setState({ authError: "Invalid username or password" }); // Set the error message
       }
     }
 
@@ -74,9 +75,19 @@ class SignInForm extends Component {
           {({ isSubmitting }) => (
             <Form className="border p-5 shadow-lg p-3 mb-5 bg-body rounded">
               <FormGroup>
-                <h3 className="text-bg-danger text-center mb-5 p-2">LOG IN</h3>
-
-                <FormLabel>Username</FormLabel>
+                <h3 className="text-bg-danger text-center mb-5 p-2 fw-bolder ">
+                  LOG IN
+                </h3>
+                {/* invalid user */}
+                {this.state.authError && (
+                  <Alert variant="danger" className="mt-2 small-alert">
+                    {this.state.authError}
+                  </Alert>
+                )}
+                {/* form  */}
+                <FormLabel className="text-uppercase text-primary fw-bolder">
+                  Username
+                </FormLabel>
                 <Field
                   type="text"
                   name="username"
@@ -93,7 +104,9 @@ class SignInForm extends Component {
               </FormGroup>
 
               <FormGroup>
-                <FormLabel>Password</FormLabel>
+                <FormLabel className="text-uppercase text-primary fw-bolder mt-3">
+                  Password
+                </FormLabel>
                 <Field
                   type="password"
                   name="password"
@@ -113,8 +126,8 @@ class SignInForm extends Component {
                 type="submit"
                 variant="primary"
                 disabled={isSubmitting}
-                className="mt-4 w-100">
-                {isSubmitting ? "Signing in..." : "Sign In"}
+                className="mt-4 w-100 text-uppercase fw-bolder">
+                {isSubmitting ? "Signing in..." : "S i g n I n"}
               </Button>
 
               <p className="mt-4">
