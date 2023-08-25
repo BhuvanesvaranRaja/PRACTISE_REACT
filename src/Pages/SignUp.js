@@ -60,7 +60,7 @@ export default class SignUp extends Component {
         states: [
           {
             name: "California",
-            districts: ["District P", "District Q", "District R"],
+            districts: ["Wilshire", "Beverly Hills", "Venice", "Los Feliz"],
           },
         ],
       },
@@ -468,7 +468,7 @@ export default class SignUp extends Component {
                   </Col>
                 </Row>  */}
                 {/* dont change */}
-                <Row>
+                <Row className="mt-3">
                   <Col md={4}>
                     <div className="form-group">
                       <label htmlFor="country" className="text-primary">

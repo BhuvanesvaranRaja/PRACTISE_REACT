@@ -74,7 +74,7 @@ class SignInForm extends Component {
           {({ isSubmitting }) => (
             <Form className="border p-5 shadow-lg p-3 mb-5 bg-body rounded">
               <FormGroup>
-                <h3 className="text-bg-danger text-center mb-5 ">LOG IN</h3>
+                <h3 className="text-bg-danger text-center mb-5 p-2">LOG IN</h3>
 
                 <FormLabel>Username</FormLabel>
                 <Field

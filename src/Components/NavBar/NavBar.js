@@ -85,7 +85,7 @@ export default function DefaultNavbar() {
   const isDashboardPath = location.pathname === "/dashboard";
 
   if (isDashboardPath) {
-    return null; // Return null to remove the navbar for the /dashboard path
+    return null;
   }
   return (
     <Navbar className="bg-primary py-3" expand="lg">
