@@ -7,10 +7,10 @@ import * as Yup from "yup";
 import FormikContainer from "../Components/Form/FormikContainer";
 import { Container, Row, Col } from "react-bootstrap";
 import AgeFieldComponent from "../Components/Form/AgeComponent";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+
 import ListofUser from "../Components/Form/ListofUser";
 import { Link } from "react-router-dom";
+import FromError from "../Components/Form/FromError";
 export default class SignUp extends Component {
   constructor(props) {
     super(props);
@@ -133,6 +133,7 @@ export default class SignUp extends Component {
         .min(10, "Invalid No")
         .matches(/^[6-9]\d{9}$/, "Invalid Number")
         .required("Number is required"),
+
       email: Yup.string()
         .email("Invalid email format")
         .matches(
@@ -188,6 +189,7 @@ export default class SignUp extends Component {
       secondryDistrictOption: Yup.string().required("Select the District"),
       secondryCountryOption: Yup.string().required("Select the country"),
       secondryStateOption: Yup.string().required("Select the State"),
+
       acceptTerms: Yup.bool()
         .oneOf([true], "You must accept the terms and conditions")
         .required("You must accept the terms and conditions"),
@@ -229,7 +231,10 @@ export default class SignUp extends Component {
             setFieldTouched,
             setFieldValue,
             errors,
+            handleBlur,
             touched,
+            setFieldError,
+            validateField,
           }) => (
             <Form>
               <h3 className="container mt-4 text-bg-danger ">REGISTER HERE</h3>
@@ -378,7 +383,7 @@ export default class SignUp extends Component {
                 </Row>
                 {/* country state district pincode */}
 
-                <Row className="mt-3">
+                {/* <Row>
                   <Col md={4}>
                     <div className="form-group">
                       <label htmlFor="country" className="text-primary">
@@ -390,20 +395,18 @@ export default class SignUp extends Component {
                         onChange={(selected) => {
                           setFieldValue("country", selected[0]);
                           setFieldValue("state", ""); // Clear selected state
-                          setFieldValue("district", ""); // Clear selected district
+                          setFieldValue("district", "");
+                          setFieldTouched("country", false); // Clear touched state
+                          // Clear selected district
                         }}
+                        onBlur={() => setFieldTouched("country", true)} // Mark field as touched on blur
                         selected={values.country ? [values.country] : []}
                       />
-                      {touched.country && errors.country && (
-                        <div className="text-danger">
-                          {" "}
-                          <FontAwesomeIcon
-                            icon={faExclamationTriangle}
-                            style={{ marginRight: "5px", fontSize: "13px" }}
-                          />
-                          {errors.country}
-                        </div>
-                      )}
+                      <ErrorMessage
+                        name="country"
+                        component={FromError}
+                        className="text-danger"
+                      />
                     </div>
                   </Col>
                   <Col md={4}>
@@ -422,23 +425,20 @@ export default class SignUp extends Component {
                         onChange={(selected) => {
                           setFieldValue("state", selected[0]);
                           setFieldValue("district", ""); // Clear selected district
+                          setFieldTouched("state", false); // Clear touched state
                         }}
+                        onBlur={() => setFieldTouched("state", true)} // Mark field as touched on blur
                         selected={values.state ? [values.state] : []}
                       />
-                      {touched.state && errors.state && (
-                        <div className="text-danger">
-                          {" "}
-                          <FontAwesomeIcon
-                            icon={faExclamationTriangle}
-                            style={{ marginRight: "5px", fontSize: "13px" }}
-                          />
-                          {errors.state}
-                        </div>
-                      )}
+                      <ErrorMessage
+                        name="state"
+                        component={FromError}
+                        className="text-danger"
+                      />
                     </div>
                   </Col>
+
                   <Col md={4}>
-                    {" "}
                     <div className="form-group">
                       <label htmlFor="district" className="text-primary">
                         DISTRICT
@@ -452,24 +452,151 @@ export default class SignUp extends Component {
                               (state) => state.name === values.state
                             )?.districts || []
                         }
-                        onChange={(selected) =>
-                          setFieldValue("district", selected[0])
-                        }
+                        onChange={(selected) => {
+                          setFieldValue("district", selected[0]);
+                          setFieldTouched("district", false);
+                        }}
+                        onBlur={() => setFieldTouched("district", true)} // Mark field as touched on blur
                         selected={values.district ? [values.district] : []}
                       />
-                      {touched.district && errors.district && (
-                        <div className="text-danger">
-                          {" "}
-                          <FontAwesomeIcon
-                            icon={faExclamationTriangle}
-                            style={{ marginRight: "5px", fontSize: "13px" }}
-                          />
-                          {errors.district}
-                        </div>
-                      )}
+                      <ErrorMessage
+                        name="district"
+                        component={FromError}
+                        className="text-danger"
+                      />
+                    </div>
+                  </Col>
+                </Row>  */}
+                {/* dont change */}
+                <Row>
+                  <Col md={4}>
+                    <div className="form-group">
+                      <label htmlFor="country" className="text-primary">
+                        COUNTRY
+                      </label>
+                      <Typeahead
+                        id="country"
+                        options={countries.map((country) => country.name)}
+                        onChange={(selected) => {
+                          setFieldValue("country", selected[0]);
+                          setFieldValue("state", ""); // Clear selected state
+                          setFieldValue("district", "");
+                          setFieldTouched("country", false); // Clear touched state
+                          // Clear selected district
+                        }}
+                        onBlur={() => setFieldTouched("country", true)} // Mark field as touched on blur
+                        selected={values.country ? [values.country] : []}
+                      />
+                      <ErrorMessage
+                        name="country"
+                        component={FromError}
+                        className="text-danger"
+                      />
+                    </div>
+                  </Col>
+                  <Col md={4}>
+                    <div className="form-group">
+                      <label htmlFor="state" className="text-primary">
+                        STATE
+                      </label>
+                      <Typeahead
+                        id="state"
+                        options={
+                          values.country
+                            ? countries
+                                .find(
+                                  (country) => country.name === values.country
+                                )
+                                ?.states.map((state) => state.name) || []
+                            : countries.flatMap((country) =>
+                                country.states.map((state) => state.name)
+                              )
+                        }
+                        onChange={(selected) => {
+                          const selectedState = selected[0];
+                          setFieldValue("state", selectedState);
+                          setFieldValue("district", ""); // Clear selected district
+                          setFieldTouched("state", false);
+
+                          // Find the country based on the selected state
+                          const countryName = countries.find((country) =>
+                            country.states.some(
+                              (state) => state.name === selectedState
+                            )
+                          )?.name;
+
+                          // Update country field
+                          setFieldValue("country", countryName);
+                          setFieldTouched("country", false); // Mark as touched
+                        }}
+                        onBlur={() => setFieldTouched("state", true)}
+                        selected={values.state ? [values.state] : []}
+                      />
+                      <ErrorMessage
+                        name="state"
+                        component={FromError}
+                        className="text-danger"
+                      />
+                    </div>
+                  </Col>
+                  <Col md={4}>
+                    <div className="form-group">
+                      <label htmlFor="district" className="text-primary">
+                        DISTRICT
+                      </label>
+                      <Typeahead
+                        id="district"
+                        options={
+                          values.state
+                            ? countries
+                                .find(
+                                  (country) => country.name === values.country
+                                )
+                                ?.states.find(
+                                  (state) => state.name === values.state
+                                )?.districts || []
+                            : countries.flatMap((country) =>
+                                country.states.flatMap(
+                                  (state) => state.districts
+                                )
+                              )
+                        }
+                        onChange={(selected) => {
+                          const selectedDistrict = selected[0];
+                          setFieldValue("district", selectedDistrict);
+                          setFieldTouched("district", false);
+
+                          // Find the state and country based on the selected district
+                          const stateName = countries
+                            .flatMap((country) => country.states)
+                            .find((state) =>
+                              state.districts.includes(selectedDistrict)
+                            )?.name;
+
+                          const countryName = countries.find((country) =>
+                            country.states.some(
+                              (state) => state.name === stateName
+                            )
+                          )?.name;
+
+                          // Update state and country fields
+                          setFieldValue("state", stateName);
+                          setFieldValue("country", countryName);
+                          setFieldTouched("state", false); // Mark as touched
+                          setFieldTouched("country", false); // Mark as touched
+                        }}
+                        onBlur={() => setFieldTouched("district", true)}
+                        selected={values.district ? [values.district] : []}
+                      />
+                      <ErrorMessage
+                        name="district"
+                        component={FromError}
+                        className="text-danger"
+                      />
                     </div>
                   </Col>
                 </Row>
+                {/* dontchange */}
                 {/* Secoindry address */}
                 <p className="mt-3 text-dark fw-bold">SECONDRY ADDRESS</p>
                 <hr />
@@ -481,6 +608,7 @@ export default class SignUp extends Component {
                       name="secaddress1"
                       id="secaddress1"
                       label="ADDRESS LINE 1"
+                      sameAsPrimary={this.state.sameAsPrimary}
                       className={
                         this.state.sameAsPrimary
                           ? "form-control hidden-input"
@@ -496,6 +624,7 @@ export default class SignUp extends Component {
                       name="secaddress2"
                       id="secaddress2"
                       label="ADDRESS LINE 2"
+                      sameAsPrimary={this.state.sameAsPrimary}
                       className={
                         this.state.sameAsPrimary
                           ? "form-control hidden-input"
@@ -511,6 +640,7 @@ export default class SignUp extends Component {
                       name="seclandmark"
                       id="seclandmark"
                       label="LANDMARK"
+                      sameAsPrimary={this.state.sameAsPrimary}
                       className={
                         this.state.sameAsPrimary
                           ? "form-control hidden-input"
@@ -526,6 +656,7 @@ export default class SignUp extends Component {
                       name="secpincode"
                       id="secpincode"
                       label="PIN CODE"
+                      sameAsPrimary={this.state.sameAsPrimary}
                       className={
                         this.state.sameAsPrimary
                           ? "form-control hidden-input"
@@ -535,8 +666,8 @@ export default class SignUp extends Component {
                     />
                   </Col>
                 </Row>
-
-                <Row className="mt-3">
+                {/* country,state,district */}
+                {/* <Row className="mt-3">
                   <Col md={4}>
                     <div className="form-group">
                       <label
@@ -551,6 +682,7 @@ export default class SignUp extends Component {
                           setFieldValue("secondryCountryOption", selected[0]);
                           setFieldValue("secondryStateOption", ""); // Clear selected state
                           setFieldValue("secondryDistrictOption", ""); // Clear selected district
+                          setFieldTouched("secondryCountryOption", false); // Clear touched state
                         }}
                         selected={
                           this.state.sameAsPrimary
@@ -559,22 +691,23 @@ export default class SignUp extends Component {
                             ? [values.secondryCountryOption]
                             : []
                         }
+                        onBlur={() => {
+                          setFieldTouched("secondryCountryOption", true); // Mark as touched
+                          validateField("secondryCountryOption"); // Trigger validation
+                        }}
                         disabled={this.state.sameAsPrimary}
                       />
 
-                      {touched.secondryCountryOption &&
-                        errors.secondryCountryOption && (
-                          <div className="text-danger">
-                            <FontAwesomeIcon
-                              icon={faExclamationTriangle}
-                              style={{ marginRight: "5px", fontSize: "13px" }}
-                            />
-                            {errors.secondryCountryOption}
-                          </div>
-                        )}
+                      {!this.state.sameAsPrimary && (
+                        <ErrorMessage
+                          name="secondryCountryOption"
+                          component={FromError}
+                          className="text-danger"
+                        />
+                      )}
                     </div>
                   </Col>
-                  {/* country state district pincode */}
+
                   <Col md={4}>
                     <div className="form-group">
                       <label
@@ -595,6 +728,7 @@ export default class SignUp extends Component {
                         onChange={(selected) => {
                           setFieldValue("secondryStateOption", selected[0]);
                           setFieldValue("secondryDistrictOption", ""); // Clear selected district
+                          setFieldTouched("secondryStateOption", false); // Clear touched state
                         }}
                         selected={
                           this.state.sameAsPrimary
@@ -603,20 +737,23 @@ export default class SignUp extends Component {
                             ? [values.secondryStateOption]
                             : []
                         }
+                        onBlur={() => {
+                          setFieldTouched("secondryStateOption", true); // Mark as touched
+                          validateField("secondryStateOption"); // Trigger validation
+                        }}
                         disabled={this.state.sameAsPrimary}
                       />
-                      {touched.secondryStateOption &&
-                        errors.secondryStateOption && (
-                          <div className="text-danger">
-                            <FontAwesomeIcon
-                              icon={faExclamationTriangle}
-                              style={{ marginRight: "5px", fontSize: "13px" }}
-                            />
-                            {errors.secondryStateOption}
-                          </div>
-                        )}
+
+                      {!this.state.sameAsPrimary && (
+                        <ErrorMessage
+                          name="secondryStateOption"
+                          component={FromError}
+                          className="text-danger"
+                        />
+                      )}
                     </div>
                   </Col>
+
                   <Col md={4}>
                     <div className="form-group">
                       <label
@@ -637,8 +774,186 @@ export default class SignUp extends Component {
                                 state.name === values.secondryStateOption
                             )?.districts || []
                         }
-                        onChange={(selected) =>
-                          setFieldValue("secondryDistrictOption", selected[0])
+                        onChange={(selected) => {
+                          setFieldValue("secondryDistrictOption", selected[0]);
+                          setFieldTouched("secondryDistrictOption", false); // Clear touched state
+                        }}
+                        selected={
+                          this.state.sameAsPrimary
+                            ? []
+                            : values.secondryDistrictOption
+                            ? [values.secondryDistrictOption]
+                            : []
+                        }
+                        onBlur={() => {
+                          setFieldTouched("secondryDistrictOption", true); // Mark as touched
+                          validateField("secondryDistrictOption"); // Trigger validation
+                        }}
+                        disabled={this.state.sameAsPrimary}
+                      />
+
+                      {!this.state.sameAsPrimary && (
+                        <ErrorMessage
+                          name="secondryDistrictOption"
+                          component={FromError}
+                          className="text-danger"
+                        />
+                      )}
+                    </div>
+                  </Col>
+                </Row>   */}
+
+                <Row className="mt-3">
+                  <Col md={4}>
+                    <div className="form-group">
+                      <label
+                        htmlFor="secondryCountryOption"
+                        className="text-primary">
+                        SECONDARY COUNTRY
+                      </label>
+                      <Typeahead
+                        id="secondryCountryOption"
+                        options={countries.map((country) => country.name)}
+                        filterBy={(option, props) =>
+                          option
+                            .toLowerCase()
+                            .includes(props.text.toLowerCase())
+                        }
+                        onChange={(selected) => {
+                          setFieldValue("secondryCountryOption", selected[0]);
+                          setFieldValue("secondryStateOption", "");
+                          setFieldValue("secondryDistrictOption", "");
+                          setFieldTouched("secondryCountryOption", false);
+                        }}
+                        selected={
+                          this.state.sameAsPrimary
+                            ? []
+                            : values.secondryCountryOption
+                            ? [values.secondryCountryOption]
+                            : []
+                        }
+                        onBlur={() => {
+                          setFieldTouched("secondryCountryOption", true);
+                          validateField("secondryCountryOption");
+                        }}
+                        disabled={this.state.sameAsPrimary}
+                      />
+                      {!this.state.sameAsPrimary && (
+                        <ErrorMessage
+                          name="secondryCountryOption"
+                          component={FromError}
+                          className="text-danger"
+                        />
+                      )}
+                    </div>
+                  </Col>
+                  <Col md={4}>
+                    <div className="form-group">
+                      <label
+                        htmlFor="secondryStateOption"
+                        className="text-primary">
+                        SECONDARY STATE
+                      </label>
+                      <Typeahead
+                        id="secondryStateOption"
+                        options={countries.flatMap((country) =>
+                          country.states.map((state) => state.name)
+                        )}
+                        onChange={(selected) => {
+                          const selectedState = selected[0];
+                          setFieldValue("secondryStateOption", selectedState);
+                          setFieldValue("secondryDistrictOption", "");
+                          setFieldTouched("secondryStateOption", false);
+
+                          // Find the country based on the selected state
+                          const countryName = countries.find((country) =>
+                            country.states.some(
+                              (state) => state.name === selectedState
+                            )
+                          )?.name;
+
+                          // Update country field
+                          setFieldValue("secondryCountryOption", countryName);
+                          setFieldTouched("secondryCountryOption", false); // Mark as touched
+                        }}
+                        onBlur={() =>
+                          setFieldTouched("secondryStateOption", true)
+                        }
+                        selected={
+                          this.state.sameAsPrimary
+                            ? []
+                            : values.secondryStateOption
+                            ? [values.secondryStateOption]
+                            : []
+                        }
+                        disabled={this.state.sameAsPrimary}
+                      />
+                      {!this.state.sameAsPrimary && (
+                        <ErrorMessage
+                          name="secondryStateOption"
+                          component={FromError}
+                          className="text-danger"
+                        />
+                      )}
+                    </div>
+                  </Col>
+
+                  <Col md={4}>
+                    <div className="form-group">
+                      <label
+                        htmlFor="secondryDistrictOption"
+                        className="text-primary">
+                        SECONDARY DISTRICT
+                      </label>
+                      <Typeahead
+                        id="secondryDistrictOption"
+                        options={
+                          values.secondryStateOption
+                            ? countries
+                                .find(
+                                  (country) =>
+                                    country.name ===
+                                    values.secondryCountryOption
+                                )
+                                ?.states.find(
+                                  (state) =>
+                                    state.name === values.secondryStateOption
+                                )?.districts || []
+                            : countries.flatMap((country) =>
+                                country.states.flatMap(
+                                  (state) => state.districts
+                                )
+                              )
+                        }
+                        onChange={(selected) => {
+                          const selectedDistrict = selected[0];
+                          setFieldValue(
+                            "secondryDistrictOption",
+                            selectedDistrict
+                          );
+                          setFieldTouched("secondryDistrictOption", false);
+
+                          // Find the state and country based on the selected district
+                          const stateName = countries
+                            .flatMap((country) => country.states)
+                            .find((state) =>
+                              state.districts.includes(selectedDistrict)
+                            )?.name;
+
+                          const countryName = countries.find((country) =>
+                            country.states.some(
+                              (state) => state.name === stateName
+                            )
+                          )?.name;
+
+                          // Update state and country fields
+                          setFieldValue("secondryStateOption", stateName);
+                          setFieldValue("secondryCountryOption", countryName);
+                          setFieldTouched("secondryStateOption", false); // Mark as touched
+                          setFieldTouched("secondryCountryOption", false); // Mark as touched
+                        }}
+                        onBlur={() =>
+                          setFieldTouched("secondryDistrictOption", true)
                         }
                         selected={
                           this.state.sameAsPrimary
@@ -649,16 +964,13 @@ export default class SignUp extends Component {
                         }
                         disabled={this.state.sameAsPrimary}
                       />
-                      {touched.secondryDistrictOption &&
-                        errors.secondryDistrictOption && (
-                          <div className="text-danger">
-                            <FontAwesomeIcon
-                              icon={faExclamationTriangle}
-                              style={{ marginRight: "5px", fontSize: "13px" }}
-                            />
-                            {errors.secondryDistrictOption}
-                          </div>
-                        )}
+                      {!this.state.sameAsPrimary && (
+                        <ErrorMessage
+                          name="secondryDistrictOption"
+                          component={FromError}
+                          className="text-danger"
+                        />
+                      )}
                     </div>
                   </Col>
                 </Row>
@@ -673,6 +985,7 @@ export default class SignUp extends Component {
 
                       if (e.target.checked) {
                         // Copy values from primary to secondary
+
                         this.setState({ showCopiedValues: true });
                         setFieldValue("secaddress1", values.address1);
                         setFieldValue("secaddress2", values.address2);
@@ -732,7 +1045,7 @@ export default class SignUp extends Component {
                 </div>
                 <ErrorMessage
                   name="acceptTerms"
-                  component="div"
+                  component={FromError}
                   className="text-danger"
                 />
 

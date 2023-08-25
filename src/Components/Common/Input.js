@@ -14,9 +14,16 @@ export default class Input extends Component {
           type={type}
           id={name}
           name={name}
-          {...rest}
-        ></Field>
-        <ErrorMessage name={name} component={FromError}></ErrorMessage>
+          {...rest}></Field>
+
+        {/* <ErrorMessage name={name} component={FromError}></ErrorMessage> */}
+        {!sameAsPrimary && (
+          <ErrorMessage
+            name={name}
+            component={FromError}
+            className="text-danger"
+          />
+        )}
       </div>
     );
   }
