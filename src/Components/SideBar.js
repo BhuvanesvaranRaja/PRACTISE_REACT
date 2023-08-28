@@ -1,19 +1,16 @@
 import React, { Component } from "react";
-import { Button, Container } from "react-bootstrap";
-import { Link, useLocation } from "react-router-dom";
-import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import ScrumComponent from "../Components/ScrumComponent";
+import { Container } from "react-bootstrap";
 import {
-  faHome,
-  faUsers,
+  faUser,
   faChevronLeft,
   faChevronRight,
-  faUser,
+  faHome,
 } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import "react-pro-sidebar/dist/css/styles.css";
 import "../Components/style.css";
+import { Link } from "react-router-dom";
 
 export default class Dashboard extends Component {
   constructor(props) {
@@ -24,10 +21,6 @@ export default class Dashboard extends Component {
       toggled: false,
     };
   }
-  handleLogout = () => {
-    localStorage.removeItem("AUTH_TOKEN");
-    localStorage.removeItem("USERNAME");
-  };
   handleCollapsedChange = () => {
     this.setState({ collapsed: !this.state.collapsed });
   };
@@ -43,18 +36,6 @@ export default class Dashboard extends Component {
     return (
       <>
         <Container fluid>
-          {/* Navbar */}
-          <div className="d-flex justify-content-between mt-3 p-3 text-dark bg-dark-subtle">
-            <h6 className="mt-2 fs-4 fw-bolder">DASHBOARD</h6>
-            <Link to="/login">
-              <Button style={{ float: "right" }} onClick={this.handleLogout}>
-                LOG OUT
-                <FontAwesomeIcon icon={faSignOutAlt} className="mx-2" />
-              </Button>
-            </Link>
-          </div>
-          {/* Sidebar component */}
-          {/* sidebar */}
           <ProSidebar
             className={`app ${this.state.toggled ? "toggled" : ""}`}
             style={{
@@ -68,13 +49,18 @@ export default class Dashboard extends Component {
             <Menu iconShape="square">
               {this.state.collapsed ? (
                 <MenuItem
-                  icon={<FontAwesomeIcon icon={faChevronRight} />}
-                  onClick={this.handleCollapsedChange}
+                  icon={
+                    <FontAwesomeIcon
+                      icon={faChevronRight}
+                      onClick={this.handleCollapsedChange}
+                    />
+                  }
                 />
               ) : (
                 <MenuItem
                   suffix={<FontAwesomeIcon icon={faChevronLeft} />}
                   onClick={this.handleCollapsedChange}>
+                  {" "}
                   <div
                     style={{
                       padding: "9px",
@@ -82,42 +68,27 @@ export default class Dashboard extends Component {
                       fontSize: 20,
                       letterSpacing: "1px",
                     }}>
+                    {" "}
                     <span className="text-success fw-bolder  text-uppercase ">
-                      {username}
-                      <FontAwesomeIcon icon={faUser} className="mx-2" />
-                    </span>
-                  </div>
+                      {" "}
+                      {username}{" "}
+                      <FontAwesomeIcon icon={faUser} className="mx-2" />{" "}
+                    </span>{" "}
+                  </div>{" "}
                 </MenuItem>
               )}
-              <hr />
               <MenuItem
                 icon={<FontAwesomeIcon icon={faHome} />}
-                className="text-white fs-5 mt-3 ">
-                Dashboard
+                className="text-white fs-5 mt-3">
+                <Link to={"/dashboard"}> Dashboard</Link>
               </MenuItem>
-              <Link to={"/dashboard/scrum"}>
-               
-                <MenuItem
-                  icon={<FontAwesomeIcon icon={faUsers} />}
-                  className="text-white fs-5 mt-3">
-                  SCRUM
-                </MenuItem>
-              </Link>
+              <MenuItem
+                icon={<FontAwesomeIcon icon={faUser} />}
+                className="text-white fs-5 mt-3">
+                <Link to={"/scrum"}>Scrum</Link>
+              </MenuItem>
             </Menu>
           </ProSidebar>
-          {/* Main Content */}
-          <div
-            style={{
-              marginLeft: "300px",
-              padding: "20px",
-              fontWeight: "bold",
-              fontSize: "30px",
-              fontFamily: "monospace",
-              textTransform: "uppercase",
-              color: "orange",
-            }}>
-            
-            </div>
         </Container>
       </>
     );

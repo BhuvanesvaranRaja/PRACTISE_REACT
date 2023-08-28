@@ -1,41 +1,4 @@
-/* 
-.form-container {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+.sidebar {
+  height: 95vh;
+  margin-top: 2px;
 }
-
-.transparent-form {
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 20px;
-  border-radius: 5px;
-}
-Form {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.error {
-  color: red;
-  font-size: 12px;
-}
-
-.submit-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.disabled-button {
-  opacity: 0.7;
-  cursor: not-allowed;
-} */

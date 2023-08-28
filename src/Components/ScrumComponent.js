@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 
-export default class    ScrumComponent extends Component {
+
+export default class ScrumComponent extends Component {
   render() {
-    return <div>ScrumComponent</div>;
+    return <div>gg</div>;
   }
 }

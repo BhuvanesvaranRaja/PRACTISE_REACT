@@ -1,13 +1,33 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
+import { Col, Row } from "react-bootstrap";
+import { Navigate, Outlet } from "react-router-dom";
+import SideBar from "../Components/SideBar";
+import LogoutNav from "../Components/NavBar/LogoutNav";
 
 class PrivateRoute extends React.Component {
   render() {
-    const { children } = this.props;
+    // const { children } = this.props;
     const isAuthenticated = localStorage.getItem("AUTH_TOKEN") !== null;
 
-    return isAuthenticated ? children : <Navigate to="/login" replace />;
+    return isAuthenticated ? (
+      <>
+        <Row>
+          <Col md={12}>
+            <LogoutNav />
+          </Col>
+        </Row>
+        <Row>
+          <Col md={2}>
+            <SideBar />
+          </Col>
+          <Col md={10} className="p-5">
+            <Outlet />
+          </Col>
+        </Row>
+      </>
+    ) : (
+      <Navigate to="/login" replace />
+    );
   }
 }
-
 export default PrivateRoute;
