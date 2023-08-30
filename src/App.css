@@ -1,4 +1,17 @@
-.sidebar {
-  height: 95vh;
-  margin-top: 2px;
+.move-icon {
+  display: none;
+  cursor: pointer;
+}
+
+.draggable-item:hover .move-icon {
+  display: block;
+}
+.scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scroll {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

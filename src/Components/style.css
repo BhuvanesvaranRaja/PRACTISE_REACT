@@ -18,6 +18,7 @@ a:hover {
 
 .menu-label {
   font-size: 13px;
+  /* background-color:lightblue; */
 }
 
 button {
@@ -30,4 +31,8 @@ hr {
 }
 .pro-sidebar {
   background-color: #fc0000 !; /* Replace with your desired background color */
+}
+
+.move-icon {
+  display: none;
 }

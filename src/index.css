@@ -32,6 +32,17 @@ code {
   transform: translateY(-50%);
   pointer-events: none;
 }
+.container {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px;
+}
+
+.App {
+  display: flex;
+  justify-content: space-around;
+}
+
 
 /* form {
   display: grid;

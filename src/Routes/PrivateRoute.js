@@ -6,7 +6,6 @@ import LogoutNav from "../Components/NavBar/LogoutNav";
 
 class PrivateRoute extends React.Component {
   render() {
-    // const { children } = this.props;
     const isAuthenticated = localStorage.getItem("AUTH_TOKEN") !== null;
 
     return isAuthenticated ? (
