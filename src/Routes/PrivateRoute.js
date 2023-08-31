@@ -1,7 +1,7 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate, Outlet } from "react-router-dom";
-import SideBar from "../Components/SideBar";
+import SideBar from "../Components/Sidebar/SideBar";
 import LogoutNav from "../Components/NavBar/LogoutNav";
 
 class PrivateRoute extends React.Component {

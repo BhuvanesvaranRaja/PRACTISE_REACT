@@ -8,28 +8,16 @@ import ErrorPage from "./Pages/ErrorPage";
 import Login from "./Pages/Login";
 import PrivateRoute from "./Routes/PrivateRoute";
 import Dashboard from "./Pages/Dashboard";
-import ScrumComponent from "./Components/ScrumComponents/ScrumComponent";
+import ScrumComponent from "./Components/ScrumComponent";
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    const isLoggedIn = localStorage.getItem("AUTH_TOKEN") !== null;
-    this.state = {
-      isLoggedIn: isLoggedIn,
-    };
-  }
   render() {
     return (
       <>
         <NavBar />
         <Routes>
           <Route path="/" element={<HomePage />} />
-          {/* <Route path="/signup" element={<SignUp />} /> */}
-          {this.state.isLoggedIn ? (
-            <Route path="/signup" element={<Navigate to="/dashboard" />} />
-          ) : (
-            <Route path="/signup" element={<SignUp />} />
-          )}
+          <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<ErrorPage />} />
           <Route element={<PrivateRoute />}>

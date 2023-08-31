@@ -4,7 +4,7 @@ import { Button, FormGroup, FormLabel, Alert } from "react-bootstrap";
 import { Link, Navigate } from "react-router-dom";
 import * as Yup from "yup";
 import "bootstrap/dist/css/bootstrap.min.css";
-import withAuthRedirect from "../Components/withAuthRedirect";
+import withAuthRedirect from "../Routes/withAuthRedirect";
 
 const customStyles = `
   .small-alert {

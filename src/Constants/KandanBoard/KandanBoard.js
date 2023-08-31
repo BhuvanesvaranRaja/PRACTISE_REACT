@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import Container from "./Container";
 import { Button } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBoxOpen } from "@fortawesome/free-solid-svg-icons";
 
 class KandanBoard extends Component {
   constructor(props) {
@@ -88,8 +90,13 @@ class KandanBoard extends Component {
   };
 
   handleNewContainerTitleChange = (e) => {
-    console.log(e.target.value);
-    this.setState({ newContainerTitle: e.target.value });
+    const newContainerTitle = e.target.value;
+    const isValid = /^[a-zA-Z0-9\s]*$/.test(newContainerTitle);
+
+    this.setState({
+      newContainerTitle,
+      showTitleError: !isValid,
+    });
   };
   moveItemToContainer = (itemId, targetContainerId) => {
     const { containers } = this.state;
@@ -125,12 +132,11 @@ class KandanBoard extends Component {
 
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
-        <div>
+        <div className="w-100 overflow-auto ">
           <div
             style={{
               display: "flex",
               flexDirection: "row",
-              maxWidth: "100%",
             }}>
             {containers.map((container) => (
               <Container
@@ -145,7 +151,7 @@ class KandanBoard extends Component {
                     JSON.stringify(updatedContainers)
                   );
                 }}
-                containers={containers} 
+                containers={containers}
                 containersFromLocalStorage={containers}
                 moveItemToContainer={this.moveItemToContainer}
               />
@@ -155,17 +161,20 @@ class KandanBoard extends Component {
                 style={{
                   height: "85vh",
                   backgroundColor: "#BDBDBD",
-                  width: "400px",
+                  width: "20%",
+                  maxWdth: "20%",
+                  minWidth: "20%",
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
-                  marginRight: "20px", // Spacing between containers
+                  marginRight: "20px",
                   alignItems: "center",
                 }}>
                 <input
                   type="text"
                   placeholder="Enter container title"
                   value={newContainerTitle}
+                  autoFocus
                   onChange={this.handleNewContainerTitleChange}
                   style={{
                     padding: "10px",
@@ -185,7 +194,9 @@ class KandanBoard extends Component {
                 <div className="d-flex gap-2 ">
                   <Button
                     className="btn-success fw-bolder"
-                    onClick={this.addContainer}>
+                    onClick={this.addContainer}
+                    disabled={showTitleError} // Disable the button when there's an error
+                  >
                     ADD
                   </Button>
                   <Button
@@ -200,16 +211,20 @@ class KandanBoard extends Component {
                 style={{
                   height: "85vh",
                   backgroundColor: "#BDBDBD",
-                  width: "400px",
+                  width: "20%",
+                  maxWdth: "20%",
+                  minWidth: "20%",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  marginRight: "20px", // Spacing between containers
+                  marginRight: "20px",
                 }}>
                 <Button
-                  className="btn-danger fw-bolder"
+                  className="btn-danger fw-bolder w-75 m-auto p-3 fw-bolder fs-6 "
+                  style={{ letterSpacing: "3px" }}
                   onClick={this.toggleAddContainerInput}>
-                  ADD CONTAINER
+                  ADD CONTAINER{"    "}
+                  <FontAwesomeIcon icon={faBoxOpen}></FontAwesomeIcon>
                 </Button>
               </div>
             )}

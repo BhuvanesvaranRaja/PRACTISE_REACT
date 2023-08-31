@@ -3,6 +3,8 @@ import { Droppable } from "react-beautiful-dnd";
 import DraggableItem from "./DraggableItem";
 import { Button } from "react-bootstrap";
 import "..//..//App.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faCheck } from "@fortawesome/free-solid-svg-icons";
 
 class Container extends Component {
   constructor(props) {
@@ -67,16 +69,21 @@ class Container extends Component {
     return (
       <div
         style={{
-          width: "400px",
-          marginBottom: "20px",
-          border: "1px solid lightgray",
-          borderRadius: "4px",
-          boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.1)",
-          backgroundColor: "#f9f9f9",
-          display: "inline-block",
+          width: "20%",
+          maxWdth: "20%",
+          minWidth: "20%",
+          // marginBottom: "20px",
+          border: "1px solid grey",
+          borderRadius: " 4px",
+          boxShadow:
+            "rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset",
+
           marginRight: "20px",
           position: "relative",
           height: "85vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-around",
         }}>
         <h2
           className="bg-primary text-center text-white fw-bolder text-uppercase  "
@@ -84,6 +91,7 @@ class Container extends Component {
             padding: "10px",
             borderBottom: "1px solid lightgray",
             letterSpacing: "2px",
+            height: "5vh",
           }}>
           {title}
         </h2>
@@ -95,9 +103,9 @@ class Container extends Component {
               {...provided.droppableProps}
               style={{
                 padding: "10px",
-                minHeight: "100px",
                 display: "flex",
                 flexDirection: "column",
+                fontWeight: "medium",
                 fontSize: "20px",
                 wordBreak: "break-word",
                 height: "66vh",
@@ -110,14 +118,21 @@ class Container extends Component {
                   index={index}
                   containersFromLocalStorage={containersFromLocalStorage}
                   moveItemToContainer={moveItemToContainer}
+                  currentTitle={title}
                 />
               ))}
               {provided.placeholder}
             </div>
           )}
         </Droppable>
+        <hr />
         {addingTask ? (
-          <div style={{ marginTop: "10px" }}>
+          <div
+            style={{
+              marginTop: "10px",
+              display: "flex",
+              flexDirection: "column",
+            }}>
             <input
               type="text"
               autoFocus
@@ -125,66 +140,31 @@ class Container extends Component {
               onChange={(e) =>
                 this.setState({ newItemContent: e.target.value })
               }
+              className="form-control fw-bold w-75 m-auto border-1"
+              placeholder="Enter task content"
               style={{
-                color: "black",
-                padding: "10px",
-                margin: "10px",
-                border: "1px solid black",
-                borderRadius: "10px",
+                marginBottom: "10px",
                 letterSpacing: "3px",
-                width: "90%",
-                position: "absolute",
-                bottom: "60px",
-                backgroundColor: "#bdbdbd",
-                fontWeight: "bolder",
-                textAlign: "center",
-                outline: "none",
-                fontSize: "18px",
+                padding: "23px",
               }}
             />
-            {/* {newItemError && (
-                    <p className="text-danger">
-                      Please enter the item content.
-                    </p>
-                  )} */}
             <Button
               onClick={this.handleAddItem}
-              style={{
-                backgroundColor: "#74b9ff",
-                color: "white",
-                border: "none",
-                width: "90%",
-                borderRadius: "4px",
-                padding: "5px 10px",
-                cursor: "pointer",
-                position: "absolute",
-                bottom: "10px",
-                fontWeight: "bolder",
-                letterSpacing: "2px",
-                textTransform: "uppercase",
-              }}>
-              Add Item
+              variant="primary"
+              className="btn btn-danger w-75 m-auto  mt-3 fw-bolder text-uppercase fs-5 mb-2 ">
+              Add
+              <FontAwesomeIcon icon={faCheck} style={{ marginLeft: "10px" }} />
             </Button>
           </div>
         ) : (
           <Button
             onClick={this.toggleAddingTask}
-            style={{
-              backgroundColor: "#4CAF50",
-              color: "white",
-              border: "none",
-              width: "90%",
-              borderRadius: "4px",
-              padding: "5px 10px",
-              cursor: "pointer",
-              marginTop: "10px",
-              position: "absolute",
-              bottom: "10px",
-              fontWeight: "bolder",
-              letterSpacing: "2px",
-              textTransform: "uppercase",
-            }}>
-            Add Task
+            className="w-75 m-auto text-uppercase fw-bolder fs-5 btn-success text-white ">
+            Add Task{" "}
+            <FontAwesomeIcon
+              icon={faPlus}
+              style={{ color: "white ", marginLeft: "10px" }}
+            />
           </Button>
         )}
       </div>

@@ -36,6 +36,7 @@ class DraggableItem extends Component {
       this.setState({ showModal: false });
     }
   };
+
   render() {
     const { item, index, containersFromLocalStorage } = this.props;
     const { showModal, selectedContainerId } = this.state;
@@ -63,20 +64,26 @@ class DraggableItem extends Component {
             }}>
             {item.content}
             <div className="move-icon" onClick={this.openModal}>
-              <FontAwesomeIcon icon={faPenToSquare} />
+              <FontAwesomeIcon icon={faPenToSquare} style={{ color: "red" }} />
             </div>
-            <Modal show={showModal} onHide={this.closeModal}>
+            <Modal
+              show={showModal}
+              onHide={this.closeModal}
+              className="fw-bolder">
               <Modal.Header closeButton>
                 <Modal.Title>MOVE TO</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <Form.Group>
-                  <Form.Label className="mt-2">MOVE TASK</Form.Label>
+                  <Form.Label className="mt-2 text-primary ">
+                    MOVE TASK
+                  </Form.Label>
                   <Form.Control
+                    className="fw-bolder text-uppercase text-center"
                     as="input"
                     value={item.content}
                     disabled></Form.Control>
-                  <Form.Label className="mt-2">TO</Form.Label>
+                  <Form.Label className="mt-2 text-success">TO</Form.Label>
                   <Form.Control
                     as="select"
                     value={selectedContainerId}

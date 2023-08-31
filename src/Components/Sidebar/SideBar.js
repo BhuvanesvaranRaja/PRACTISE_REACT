@@ -9,7 +9,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import "react-pro-sidebar/dist/css/styles.css";
-import "../Components/style.css";
+import ".././Sidebar/style.css";
 import { Link } from "react-router-dom";
 
 export default class Dashboard extends Component {
