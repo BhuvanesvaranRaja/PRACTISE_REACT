@@ -79,23 +79,28 @@ class DraggableItem extends Component {
               onHide={this.closeModal}
               className="fw-bolder">
               <Modal.Header closeButton>
-                <Modal.Title>MOVE TO</Modal.Title>
+                <Modal.Title className="fs-2 fw-bolder text-danger">
+                  EDIT TASK
+                </Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <Form.Group>
-                  <Form.Label className="mt-2 text-primary">
-                    MOVE TASK
+                  <Form.Label className="mt-2 text-primary fs-4 w-100">
+                    TASK NAME :
                   </Form.Label>
                   <Form.Control
-                    className="fw-bolder text-uppercase text-center"
+                    className="fw-bolder text-uppercase text-center fs-3   "
                     as="input"
-                    value={selectedContent} // Corrected line
+                    value={selectedContent}
                     onChange={this.handleContentChange}
                   />
-                  <Form.Label className="mt-2 text-success">TO</Form.Label>
+                  <Form.Label className="mt-3 text-success fs-4 ">
+                    MOVE TO :
+                  </Form.Label>
                   <Form.Control
                     as="select"
                     value={selectedContainerId}
+                    className="fs-5"
                     onChange={this.handleContainerChange}>
                     <option value="">Select a container</option>
                     {containersFromLocalStorage.map((container) => (
@@ -105,17 +110,17 @@ class DraggableItem extends Component {
                     ))}
                   </Form.Control>
                 </Form.Group>
-
+                {/* ACCORDIAN FOR HISTORY */}
                 <Accordion
                   flush
                   className="mt-2 p-3 w-100"
                   defaultActiveKey={[]}>
                   <Accordion.Item>
-                    <Accordion.Header className="">
-                      <h3> VIEW HISTORY</
+                    <Accordion.Header>
+                      <h6> VIEW HISTORY</h6>
                     </Accordion.Header>
                     <Accordion.Body>
-                      <div className="h-50 overflow-scroll ">
+                      <div style={{ height: "500px", overflow: "auto" }}>
                         <History changes={changes} />
                       </div>
                     </Accordion.Body>
@@ -123,10 +128,16 @@ class DraggableItem extends Component {
                 </Accordion>
               </Modal.Body>
               <Modal.Footer>
-                <Button variant="secondary" onClick={this.closeModal}>
+                <Button
+                  variant="secondary"
+                  className="p-3 fw-bolder "
+                  onClick={this.closeModal}>
                   CANCEL
                 </Button>
-                <Button variant="primary" onClick={this.handleMoveItem}>
+                <Button
+                  variant="primary"
+                  className="p-3 fw-bolder "
+                  onClick={this.handleMoveItem}>
                   UPDATE
                 </Button>
               </Modal.Footer>

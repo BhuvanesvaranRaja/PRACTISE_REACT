@@ -163,12 +163,17 @@ class Container extends Component {
               onChange={(e) =>
                 this.setState({ newItemContent: e.target.value })
               }
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  this.handleAddItem();
+                }
+              }}
               className="form-control fw-bold w-75 m-auto border-1"
               placeholder="Enter task content"
               style={{
                 marginBottom: "10px",
                 letterSpacing: "3px",
-                padding: "23px",
+                padding: "20px",
               }}
             />
             <div className="d-flex gap-2 m-auto  ">

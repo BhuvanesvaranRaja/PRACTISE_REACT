@@ -231,6 +231,11 @@ class KandanBoard extends Component {
                   value={newContainerTitle}
                   autoFocus
                   onChange={this.handleNewContainerTitleChange}
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter") {
+                      this.addContainer();
+                    }
+                  }}
                   style={{
                     padding: "10px",
                     marginBottom: "10px",
@@ -284,7 +289,6 @@ class KandanBoard extends Component {
             )}
           </div>
         </div>
-
       </DragDropContext>
     );
   }
