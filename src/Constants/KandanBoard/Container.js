@@ -4,7 +4,7 @@ import DraggableItem from "./DraggableItem";
 import { Button } from "react-bootstrap";
 import "..//..//App.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faCheck, faX } from "@fortawesome/free-solid-svg-icons";
 
 class Container extends Component {
   constructor(props) {
@@ -19,8 +19,16 @@ class Container extends Component {
   toggleAddingTask = () => {
     this.setState((prevState) => ({
       addingTask: !prevState.addingTask,
-      newItemContent: "", // Clear input on toggle
-      newItemError: false, // Clear error on toggle
+      newItemContent: "",
+      newItemError: false,
+    }));
+  };
+  toggleCancellingTask = () => {
+    this.setState((prevState) => ({
+      cancellingTask: !prevState.cancellingTask,
+      addingTask: false,
+      newItemContent: "",
+      newItemError: false,
     }));
   };
 
@@ -37,7 +45,7 @@ class Container extends Component {
         content: newItemContent,
       };
 
-      const { containers, setContainers, id } = this.props;
+      const { containers, setContainers, id, title } = this.props;
       const updatedContainers = containers.map((container) => {
         if (container.id === id) {
           return {
@@ -54,6 +62,17 @@ class Container extends Component {
         addingTask: false,
         newItemError: false,
       });
+
+      // Log the task addition
+      const currentDate = new Date();
+      const change = {
+        username: localStorage.getItem("USERNAME"),
+        type: "add",
+        Container: title,
+        Task: newItemContent,
+        dateTime: currentDate.toLocaleString(),
+      };
+      this.props.logChange(change);
     }
   };
 
@@ -64,8 +83,10 @@ class Container extends Component {
       title,
       containersFromLocalStorage,
       moveItemToContainer,
+      currentUser,
+      changes,
     } = this.props;
-    const { newItemContent, addingTask, newItemError } = this.state;
+    const { newItemContent, addingTask } = this.state;
     return (
       <div
         style={{
@@ -119,6 +140,8 @@ class Container extends Component {
                   containersFromLocalStorage={containersFromLocalStorage}
                   moveItemToContainer={moveItemToContainer}
                   currentTitle={title}
+                  currentUser={currentUser}
+                  changes={changes}
                 />
               ))}
               {provided.placeholder}
@@ -148,13 +171,25 @@ class Container extends Component {
                 padding: "23px",
               }}
             />
-            <Button
-              onClick={this.handleAddItem}
-              variant="primary"
-              className="btn btn-danger w-75 m-auto  mt-3 fw-bolder text-uppercase fs-5 mb-2 ">
-              Add
-              <FontAwesomeIcon icon={faCheck} style={{ marginLeft: "10px" }} />
-            </Button>
+            <div className="d-flex gap-2 m-auto  ">
+              <Button
+                onClick={this.handleAddItem}
+                variant="primary"
+                className="btn btn-success mt-3 fw-bolder text-uppercase fs-6 mb-2 ">
+                Add
+                <FontAwesomeIcon
+                  icon={faCheck}
+                  style={{ marginLeft: "10px" }}
+                />
+              </Button>
+              <Button
+                onClick={this.toggleCancellingTask}
+                variant="secondary"
+                className="btn btn-danger  mt-3 fw-bolder text-uppercase fs-6 mb-2">
+                Cancel
+                <FontAwesomeIcon icon={faX} style={{ marginLeft: "10px" }} />
+              </Button>
+            </div>
           </div>
         ) : (
           <Button

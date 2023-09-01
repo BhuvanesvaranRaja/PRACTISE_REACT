@@ -1,0 +1,33 @@
+.history-container {
+  margin-top: 20px;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ccc;
+  letter-spacing: 3px;
+  
+}
+
+.history-table th,
+.history-table td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ccc;
+}
+
+.history-table th {
+  background-color: #f2f2f2;
+}
+
+.history-table tbody tr:nth-child(even) {
+  background-color: #a8dfd7;
+  color: black;
+}
+.history-table th {
+  background-color: rgb(253, 124, 92);
+  font-weight: bold;
+  letter-spacing: 4px;
+  font-size: 20px;
+}

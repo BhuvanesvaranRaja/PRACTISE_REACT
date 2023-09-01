@@ -4,11 +4,13 @@ import Container from "./Container";
 import { Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBoxOpen } from "@fortawesome/free-solid-svg-icons";
+import History from "./History";
 
 class KandanBoard extends Component {
   constructor(props) {
     super(props);
     const savedContainers = JSON.parse(localStorage.getItem("containers"));
+    const savedChanges = JSON.parse(localStorage.getItem("changes"));
 
     this.state = {
       containers: savedContainers || [
@@ -25,16 +27,17 @@ class KandanBoard extends Component {
       ],
       showAddContainerInput: false,
       newContainerTitle: "",
+      changes: savedChanges || [],
     };
   }
-
+  // DRAG ENND
   onDragEnd = (result) => {
+    console.log(result);
     const { source, destination } = result;
 
     if (!destination) {
       return;
     }
-
     const { containers } = this.state;
     const sourceContainer = containers.find(
       (container) => container.id === source.droppableId
@@ -53,11 +56,25 @@ class KandanBoard extends Component {
       }
       return container;
     });
+    const content = removed.content;
 
+    // changes LOG in ONDRAG
+    const currentDate = new Date();
+    const change = {
+      username: localStorage.getItem("USERNAME"),
+      type: "drag",
+      sourceContainerId: sourceContainer.title,
+      destinationContainerId: destinationContainer.title,
+      itemId: removed.id,
+      contentValue: content,
+      dateTime: currentDate.toLocaleString(), // Add the date and time
+    };
+    this.logChange(change);
     this.setState({ containers: updatedContainers });
     localStorage.setItem("containers", JSON.stringify(updatedContainers));
   };
 
+  // NEW Container
   addContainer = () => {
     const { containers, newContainerTitle } = this.state;
     if (newContainerTitle.trim() === "") {
@@ -71,7 +88,6 @@ class KandanBoard extends Component {
       title: this.state.newContainerTitle,
       items: [],
     };
-
     const updatedContainers = [...containers, newContainer];
     this.setState({
       containers: updatedContainers,
@@ -79,6 +95,14 @@ class KandanBoard extends Component {
       newContainerTitle: "",
       showTitleError: false,
     });
+    const currentDate = new Date();
+    const change = {
+      username: localStorage.getItem("USERNAME"),
+      type: "create",
+      Container: newContainer.title,
+      dateTime: currentDate.toLocaleString(),
+    };
+    this.logChange(change);
     localStorage.setItem("containers", JSON.stringify(updatedContainers));
   };
 
@@ -88,38 +112,64 @@ class KandanBoard extends Component {
       newContainerTitle: "",
     }));
   };
-
+  // NEW Container title validation
   handleNewContainerTitleChange = (e) => {
     const newContainerTitle = e.target.value;
     const isValid = /^[a-zA-Z0-9\s]*$/.test(newContainerTitle);
-
     this.setState({
       newContainerTitle,
       showTitleError: !isValid,
     });
   };
-  moveItemToContainer = (itemId, targetContainerId) => {
+  // Container Movement using Modal
+  moveItemToContainer = (itemId, targetContainerId, selectedContent) => {
     const { containers } = this.state;
-
     const sourceContainer = containers.find((container) =>
       container.items.some((item) => item.id === itemId)
     );
     const targetContainer = containers.find(
       (container) => container.id === targetContainerId
     );
-
     const itemToMove = sourceContainer.items.find((item) => item.id === itemId);
     sourceContainer.items = sourceContainer.items.filter(
       (item) => item.id !== itemId
     );
-    targetContainer.items.push(itemToMove);
+    const BeforeEdit = itemToMove.content;
+    console.log("item ti move previos", itemToMove.content);
 
+    // Update the content of the item before moving it
+    itemToMove.content = selectedContent;
+    targetContainer.items.push(itemToMove);
     const updatedContainers = containers.map((container) =>
       container.id === sourceContainer.id ? sourceContainer : container
     );
-
+    // changes Object for MOVE
+    const currentDate = new Date();
+    const change = {
+      username: localStorage.getItem("USERNAME"),
+      type: "move",
+      MovedFrom: sourceContainer.title,
+      MovedTo: targetContainer.title,
+      itemId: itemToMove.id,
+      selectedContent,
+      BeforeEdit,
+      dateTime: currentDate.toLocaleString(),
+    };
+    this.logChange(change); // updating the log for local storage
     this.setState({ containers: updatedContainers });
     localStorage.setItem("containers", JSON.stringify(updatedContainers));
+  };
+  // changes log
+  logChange = (change) => {
+    this.setState(
+      (prevState) => ({
+        changes: [...prevState.changes, change], // Add the change to the array
+      }),
+      () => {
+        // Save the updated changes array to localStorage
+        localStorage.setItem("changes", JSON.stringify(this.state.changes));
+      }
+    );
   };
 
   render() {
@@ -128,6 +178,8 @@ class KandanBoard extends Component {
       showAddContainerInput,
       newContainerTitle,
       showTitleError,
+      userName,
+      changes,
     } = this.state;
 
     return (
@@ -144,6 +196,7 @@ class KandanBoard extends Component {
                 id={container.id}
                 items={container.items}
                 title={container.title}
+                currentUser={userName}
                 setContainers={(updatedContainers) => {
                   this.setState({ containers: updatedContainers });
                   localStorage.setItem(
@@ -154,6 +207,8 @@ class KandanBoard extends Component {
                 containers={containers}
                 containersFromLocalStorage={containers}
                 moveItemToContainer={this.moveItemToContainer}
+                changes={changes}
+                logChange={this.logChange} // Pass the method as a prop with lowercase "l"
               />
             ))}
             {showAddContainerInput ? (
@@ -195,8 +250,7 @@ class KandanBoard extends Component {
                   <Button
                     className="btn-success fw-bolder"
                     onClick={this.addContainer}
-                    disabled={showTitleError} // Disable the button when there's an error
-                  >
+                    disabled={showTitleError}>
                     ADD
                   </Button>
                   <Button
@@ -223,13 +277,14 @@ class KandanBoard extends Component {
                   className="btn-danger fw-bolder w-75 m-auto p-3 fw-bolder fs-6 "
                   style={{ letterSpacing: "3px" }}
                   onClick={this.toggleAddContainerInput}>
-                  ADD CONTAINER{"    "}
+                  ADD CONTAINER{" "}
                   <FontAwesomeIcon icon={faBoxOpen}></FontAwesomeIcon>
                 </Button>
               </div>
             )}
           </div>
         </div>
+
       </DragDropContext>
     );
   }

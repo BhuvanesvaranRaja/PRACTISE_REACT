@@ -16,7 +16,15 @@ export default class LogoutNav extends Component {
           <h6 className="mt-2 fs-4 fw-bolder">DASHBOARD</h6>
           <Link to="/login">
             {" "}
-            <Button style={{ float: "right" }} onClick={this.handleLogout}>
+            <Button
+              variant="danger"
+              style={{
+                float: "right",
+                fontSize: "15px",
+                letterSpacing: "3px",
+                fontWeight: "bolder",
+              }}
+              onClick={this.handleLogout}>
               LOG OUT
               <FontAwesomeIcon icon={faSignOutAlt} className="mx-2" />
             </Button>

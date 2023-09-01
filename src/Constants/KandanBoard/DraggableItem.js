@@ -6,6 +6,8 @@ import Form from "react-bootstrap/Form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import "..//../App.css";
+import History from "./History";
+import Accordion from "react-bootstrap/Accordion";
 
 class DraggableItem extends Component {
   constructor(props) {
@@ -13,6 +15,7 @@ class DraggableItem extends Component {
     this.state = {
       showModal: false,
       selectedContainerId: "",
+      selectedContent: props.item.content,
     };
   }
 
@@ -28,19 +31,23 @@ class DraggableItem extends Component {
     this.setState({ selectedContainerId: event.target.value });
   };
 
+  handleContentChange = (event) => {
+    this.setState({ selectedContent: event.target.value });
+  };
+
   handleMoveItem = () => {
     const { item, moveItemToContainer } = this.props;
-    const { selectedContainerId } = this.state;
-    if (selectedContainerId) {
-      moveItemToContainer(item.id, selectedContainerId);
+    const { selectedContainerId, selectedContent } = this.state;
+    if (selectedContainerId && selectedContent) {
+      moveItemToContainer(item.id, selectedContainerId, selectedContent);
       this.setState({ showModal: false });
     }
   };
 
   render() {
-    const { item, index, containersFromLocalStorage } = this.props;
-    const { showModal, selectedContainerId } = this.state;
-
+    const { item, index, containersFromLocalStorage, changes } = this.props;
+    const { showModal, selectedContainerId, selectedContent } = this.state;
+    console.log("changes", changes);
     return (
       <Draggable draggableId={item.id} index={index}>
         {(provided) => (
@@ -48,7 +55,7 @@ class DraggableItem extends Component {
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
-            className="draggable-item" // Apply the draggable-item classy
+            className="draggable-item"
             style={{
               userSelect: "none",
               padding: "8px",
@@ -67,6 +74,7 @@ class DraggableItem extends Component {
               <FontAwesomeIcon icon={faPenToSquare} style={{ color: "red" }} />
             </div>
             <Modal
+              size="xl"
               show={showModal}
               onHide={this.closeModal}
               className="fw-bolder">
@@ -75,14 +83,15 @@ class DraggableItem extends Component {
               </Modal.Header>
               <Modal.Body>
                 <Form.Group>
-                  <Form.Label className="mt-2 text-primary ">
+                  <Form.Label className="mt-2 text-primary">
                     MOVE TASK
                   </Form.Label>
                   <Form.Control
                     className="fw-bolder text-uppercase text-center"
                     as="input"
-                    value={item.content}
-                    disabled></Form.Control>
+                    value={selectedContent} // Corrected line
+                    onChange={this.handleContentChange}
+                  />
                   <Form.Label className="mt-2 text-success">TO</Form.Label>
                   <Form.Control
                     as="select"
@@ -96,13 +105,29 @@ class DraggableItem extends Component {
                     ))}
                   </Form.Control>
                 </Form.Group>
+
+                <Accordion
+                  flush
+                  className="mt-2 p-3 w-100"
+                  defaultActiveKey={[]}>
+                  <Accordion.Item>
+                    <Accordion.Header className="">
+                      <h3> VIEW HISTORY</
+                    </Accordion.Header>
+                    <Accordion.Body>
+                      <div className="h-50 overflow-scroll ">
+                        <History changes={changes} />
+                      </div>
+                    </Accordion.Body>
+                  </Accordion.Item>
+                </Accordion>
               </Modal.Body>
               <Modal.Footer>
                 <Button variant="secondary" onClick={this.closeModal}>
-                  Cancel
+                  CANCEL
                 </Button>
                 <Button variant="primary" onClick={this.handleMoveItem}>
-                  Move Item
+                  UPDATE
                 </Button>
               </Modal.Footer>
             </Modal>
