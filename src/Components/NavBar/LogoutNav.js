@@ -12,12 +12,14 @@ export default class LogoutNav extends Component {
   render() {
     return (
       <div>
-        <div className="d-flex justify-content-between mt-3 p-3 text-dark bg-dark-subtle">
-          <h6 className="mt-2 fs-4 fw-bolder">DASHBOARD</h6>
+        <div className="d-flex justify-content-between mt-3 mx-3 p-3 text-dark bg-success-subtle">
+          <h6 className="mt-2 fs-4 fw-bolder" style={{ letterSpacing: "2px" }}>
+            WELCOME !!
+          </h6>
           <Link to="/login">
             {" "}
             <Button
-              variant="danger"
+              className="btn-danger"
               style={{
                 float: "right",
                 fontSize: "15px",

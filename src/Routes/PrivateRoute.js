@@ -1,10 +1,21 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate, Outlet } from "react-router-dom";
-import SideBar from "../Components/Sidebar/SideBar";
+import SideBar from "../Components/Sidebar/SideBar.js";
 import LogoutNav from "../Components/NavBar/LogoutNav";
 
 class PrivateRoute extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      collapsed: false, // Initialize the collapsed state
+    };
+  }
+  updateSidebarCollapsed = (collapsed) => {
+    this.setState({ collapsed });
+  };
+
   render() {
     const isAuthenticated = localStorage.getItem("AUTH_TOKEN") !== null;
 
@@ -16,10 +27,10 @@ class PrivateRoute extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col md={2}>
-            <SideBar />
+          <Col md={this.state.collapsed ? 1 : 2}>
+            <SideBar updateCollapsed={this.updateSidebarCollapsed} />{" "}
           </Col>
-          <Col md={10} className="p-5">
+          <Col md={this.state.collapsed ? 11 : 10} className="p-5">
             <Outlet />
           </Col>
         </Row>
@@ -29,4 +40,5 @@ class PrivateRoute extends React.Component {
     );
   }
 }
+
 export default PrivateRoute;

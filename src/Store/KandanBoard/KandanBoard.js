@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
-import Container from "./Container";
-import { Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBoxOpen } from "@fortawesome/free-solid-svg-icons";
-import History from "./History";
+import { Button } from "react-bootstrap";
+import Container from "./Container";
+// import ModalHistory from "./ModalHistory";
 
 class KandanBoard extends Component {
   constructor(props) {
@@ -184,7 +184,12 @@ class KandanBoard extends Component {
 
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
-        <div className="w-100 overflow-auto ">
+        {/* HISTORY MODAL */}
+        {/* <div className="d-flex justify-content-between align-items-center mt-2"> */}
+        {/* <h3 className="fw-bold fs-3">SCRUM MANAGER</h3> */}
+        {/* <ModalHistory changes={changes} />   */}
+        {/* </div> */}
+        <div className="w-100 overflow-auto mt-4  ">
           <div
             style={{
               display: "flex",
@@ -208,7 +213,7 @@ class KandanBoard extends Component {
                 containersFromLocalStorage={containers}
                 moveItemToContainer={this.moveItemToContainer}
                 changes={changes}
-                logChange={this.logChange} // Pass the method as a prop with lowercase "l"
+                logChange={this.logChange}
               />
             ))}
             {showAddContainerInput ? (

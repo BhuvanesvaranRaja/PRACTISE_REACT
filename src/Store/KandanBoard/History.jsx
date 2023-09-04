@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./History.css";
+import "..//..//Assets//CSS//History.css";
 
 class History extends Component {
   render() {
@@ -30,7 +30,7 @@ class History extends Component {
                   if (change.selectedContent !== change.BeforeEdit) {
                     action = "MOVED/VALUE CHANGED";
                     details = ` Value  changed from [${change.BeforeEdit} ]to [${change.selectedContent}] and moved form 
-                     ${change.MovedFrom} to ${change.MovedTo}`;
+                      ${change.MovedFrom} to ${change.MovedTo}`;
                     actionClassName = "text-bg-danger";
                   } else {
                     actionClassName = "text-bg-danger";
@@ -69,7 +69,6 @@ class History extends Component {
                 <tr key={index}>
                   <td>{SerialNumber++}</td>
                   <td>{change.username}</td>
-                  {/* <td>{action}</td> */}
                   <td className={actionClassName}>{action}</td>
                   <td>{details}</td>
                   <td>{time}</td>

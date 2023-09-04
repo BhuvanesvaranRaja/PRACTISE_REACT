@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { Droppable } from "react-beautiful-dnd";
-import DraggableItem from "./DraggableItem";
-import { Button } from "react-bootstrap";
-import "..//..//App.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faCheck, faX } from "@fortawesome/free-solid-svg-icons";
+import { Droppable } from "react-beautiful-dnd";
+import { Button } from "react-bootstrap";
+import DraggableItem from "./DraggableItem";
+import "..//..//App.css";
 
 class Container extends Component {
   constructor(props) {
@@ -98,7 +98,6 @@ class Container extends Component {
           borderRadius: " 4px",
           boxShadow:
             "rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset",
-
           marginRight: "20px",
           position: "relative",
           height: "85vh",
@@ -113,6 +112,8 @@ class Container extends Component {
             borderBottom: "1px solid lightgray",
             letterSpacing: "2px",
             height: "5vh",
+            background:
+              " linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 0%, rgba(0,212,255,1) 100%)",
           }}>
           {title}
         </h2>

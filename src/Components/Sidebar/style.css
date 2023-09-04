@@ -7,15 +7,6 @@
   font-family: "Poppins", sans-serif;
 }
 
-a:hover {
-  color: #0000ff; /* #0ab4ff */
-  font-size: 1.1rem;
-}
-.menu-anchor:hover {
-  background-color: #cafce1 !important;
-  font-weight: bolder;
-}
-
 .menu-label {
   font-size: 13px;
   /* background-color:lightblue; */
@@ -35,4 +26,9 @@ hr {
 
 .move-icon {
   display: none;
+}
+.active-menu-item {
+  background-color: #dd4445;
+  font-weight: bolder;
+  letter-spacing: 2px;
 }

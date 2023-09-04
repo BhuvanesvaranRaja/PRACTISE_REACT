@@ -1,37 +1,47 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import { Container } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
   faChevronLeft,
   faChevronRight,
   faHome,
+  faLeaf,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import "react-pro-sidebar/dist/css/styles.css";
 import ".././Sidebar/style.css";
-import { Link } from "react-router-dom";
 
-export default class Dashboard extends Component {
+class SideBar extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       collapsed: false,
       toggled: false,
+      activeMenuItem: "dashboard",
     };
   }
-  handleCollapsedChange = () => {
-    this.setState({ collapsed: !this.state.collapsed });
+
+  handleToggleSidebar = () => {
+    const { collapsed } = this.state;
+    const newCollapsed = !collapsed;
+    this.setState({
+      toggled: newCollapsed,
+      collapsed: newCollapsed,
+    });
+    // Notify the parent component (PrivateRoute) of the new collapsed state
+    this.props.updateCollapsed(newCollapsed);
   };
 
-  handleToggleSidebar = (value) => {
-    this.setState({ toggled: value });
-    console.log(value);
+  handleMenuItemClick = (menuKey) => {
+    this.setState({ activeMenuItem: menuKey });
   };
 
   render() {
     const username = localStorage.getItem("USERNAME");
+    const { activeMenuItem } = this.state;
 
     return (
       <>
@@ -39,12 +49,11 @@ export default class Dashboard extends Component {
           <ProSidebar
             className={`app ${this.state.toggled ? "toggled" : ""}`}
             style={{
-              height: "90%",
+              height: "100%",
               position: "absolute",
               marginTop: "5px",
             }}
             collapsed={this.state.collapsed}
-            toggled={this.state.toggled}
             onToggle={this.handleToggleSidebar}>
             <Menu iconShape="square">
               {this.state.collapsed ? (
@@ -52,40 +61,63 @@ export default class Dashboard extends Component {
                   icon={
                     <FontAwesomeIcon
                       icon={faChevronRight}
-                      onClick={this.handleCollapsedChange}
+                      onClick={this.handleToggleSidebar}
                     />
                   }
                 />
               ) : (
                 <MenuItem
                   suffix={<FontAwesomeIcon icon={faChevronLeft} />}
-                  onClick={this.handleCollapsedChange}>
-                  {" "}
+                  onClick={this.handleToggleSidebar}>
                   <div
                     style={{
                       padding: "9px",
                       fontWeight: "bold",
                       fontSize: 20,
-                      letterSpacing: "1px",
+                      letterSpacing: "px",
                     }}>
-                    {" "}
-                    <span className="text-success fw-bolder  text-uppercase ">
-                      {" "}
-                      {username}{" "}
-                      <FontAwesomeIcon icon={faUser} className="mx-2" />{" "}
-                    </span>{" "}
-                  </div>{" "}
+                    <span className="text-success fw-bolder  text-uppercase fs-4">
+                      {username}
+                      <FontAwesomeIcon icon={faUser} className="mx-4" />
+                    </span>
+                  </div>
                 </MenuItem>
               )}
               <MenuItem
                 icon={<FontAwesomeIcon icon={faHome} />}
-                className="text-white fs-5 mt-3">
-                <Link to={"/dashboard"}> Dashboard</Link>
+                className={` fs-4 mt-3 ${
+                  activeMenuItem === "dashboard" ? "active-menu-item" : ""
+                }`}>
+                <Link
+                  to={"/dashboard"}
+                  className="text-white"
+                  onClick={() => this.handleMenuItemClick("dashboard")}>
+                  Dashboard
+                </Link>
               </MenuItem>
               <MenuItem
                 icon={<FontAwesomeIcon icon={faUser} />}
-                className="text-white fs-5 mt-3">
-                <Link to={"/scrum"}>Scrum</Link>
+                className={` fs-4 mt-3  ${
+                  activeMenuItem === "scrum" ? "active-menu-item" : ""
+                }`}>
+                <Link
+                  to={"/scrum"}
+                  className="text-white"
+                  onClick={() => this.handleMenuItemClick("scrum")}>
+                  Scrum
+                </Link>
+              </MenuItem>
+              <MenuItem
+                icon={<FontAwesomeIcon icon={faLeaf} />}
+                className={` fs-4   mt-3 ${
+                  activeMenuItem === "hooks" ? "active-menu-item" : ""
+                }`}>
+                <Link
+                  to={"/hooks"}
+                  className="text-white"
+                  onClick={() => this.handleMenuItemClick("hooks")}>
+                  Hooks
+                </Link>
               </MenuItem>
             </Menu>
           </ProSidebar>
@@ -94,3 +126,5 @@ export default class Dashboard extends Component {
     );
   }
 }
+
+export default SideBar;

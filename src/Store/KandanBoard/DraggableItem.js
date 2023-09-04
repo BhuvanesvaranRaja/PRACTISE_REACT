@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { Draggable } from "react-beautiful-dnd";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import "..//../App.css";
-import History from "./History";
 import Accordion from "react-bootstrap/Accordion";
+import History from "./History";
+import "..//../App.css";
 
 class DraggableItem extends Component {
   constructor(props) {
@@ -28,7 +28,11 @@ class DraggableItem extends Component {
   };
 
   handleContainerChange = (event) => {
-    this.setState({ selectedContainerId: event.target.value });
+    const selectedContainerId = event.target.value;
+    this.setState({
+      selectedContainerId,
+      validationMessage: selectedContainerId ? "" : "Please select a containe ",
+    });
   };
 
   handleContentChange = (event) => {
@@ -41,13 +45,21 @@ class DraggableItem extends Component {
     if (selectedContainerId && selectedContent) {
       moveItemToContainer(item.id, selectedContainerId, selectedContent);
       this.setState({ showModal: false });
+    } else {
+      this.setState({
+        validationMessage: "Please select a container ",
+      });
     }
   };
 
   render() {
     const { item, index, containersFromLocalStorage, changes } = this.props;
-    const { showModal, selectedContainerId, selectedContent } = this.state;
-    console.log("changes", changes);
+    const {
+      showModal,
+      selectedContainerId,
+      selectedContent,
+      validationMessage,
+    } = this.state;
     return (
       <Draggable draggableId={item.id} index={index}>
         {(provided) => (
@@ -69,7 +81,9 @@ class DraggableItem extends Component {
 
               ...provided.draggableProps.style,
             }}>
-            {item.content}
+            <span className="fw-bold text-uppercase text-center ">
+              {item.content}
+            </span>
             <div className="move-icon" onClick={this.openModal}>
               <FontAwesomeIcon icon={faPenToSquare} style={{ color: "red" }} />
             </div>
@@ -109,6 +123,9 @@ class DraggableItem extends Component {
                       </option>
                     ))}
                   </Form.Control>
+                  {validationMessage && (
+                    <div className="text-danger">{validationMessage}</div>
+                  )}
                 </Form.Group>
                 {/* ACCORDIAN FOR HISTORY */}
                 <Accordion
@@ -117,10 +134,11 @@ class DraggableItem extends Component {
                   defaultActiveKey={[]}>
                   <Accordion.Item>
                     <Accordion.Header>
-                      <h6> VIEW HISTORY</h6>
+                      <h6 className="text-bg-danger p-1"> VIEW HISTORY</h6>
                     </Accordion.Header>
                     <Accordion.Body>
                       <div style={{ height: "500px", overflow: "auto" }}>
+                        {/* HISTORY */}
                         <History changes={changes} />
                       </div>
                     </Accordion.Body>

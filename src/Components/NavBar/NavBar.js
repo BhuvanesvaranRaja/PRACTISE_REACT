@@ -17,8 +17,9 @@ export default function DefaultNavbar() {
 
   const isDashboardPath = location.pathname === "/dashboard";
   const isScrumPath = location.pathname === "/scrum";
+  const HooksPath = location.pathname === "/hooks";
 
-  if (isDashboardPath || isScrumPath) {
+  if (isDashboardPath || isScrumPath || HooksPath) {
     return null;
   }
   return (

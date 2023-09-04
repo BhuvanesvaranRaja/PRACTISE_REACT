@@ -1,10 +1,10 @@
 import React, { Component } from "react";
+import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Button, FormGroup, FormLabel, Alert } from "react-bootstrap";
 import { Link, Navigate } from "react-router-dom";
-import * as Yup from "yup";
+import withAuthRedirect from "../Components/Login/withAuthRedirect";
 import "bootstrap/dist/css/bootstrap.min.css";
-import withAuthRedirect from "../Routes/withAuthRedirect";
 
 const customStyles = `
   .small-alert {

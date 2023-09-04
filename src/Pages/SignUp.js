@@ -1,27 +1,34 @@
 import React, { Component } from "react";
+import * as Yup from "yup";
+import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Typeahead } from "react-bootstrap-typeahead";
+import { Container, Row, Col, Toast } from "react-bootstrap";
+import { faSmile } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-bootstrap-typeahead/css/Typeahead.css";
-import { Typeahead } from "react-bootstrap-typeahead";
-import * as Yup from "yup";
 import FormikContainer from "../Components/Form/FormikContainer";
-import { Container, Row, Col } from "react-bootstrap";
-import AgeFieldComponent from "../Components/Form/AgeComponent";
-
-import ListofUser from "../Components/Form/ListofUser";
-import { Link } from "react-router-dom";
 import FromError from "../Components/Form/FromError";
+import AgeFieldComponent from "../Components/Form/AgeComponent";
+import ListofUser from "../Components/Form/ListofUser";
+
 export default class SignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {
       sameAsPrimary: false,
+      showToast: false,
     };
   }
   handleSameAsPrimaryChange = () => {
     this.setState((prevState) => ({
       sameAsPrimary: !prevState.sameAsPrimary,
     }));
+  };
+  scrollToTop = () => {
+    console.log("inside");
+    window.scrollTo(0, 0);
   };
 
   render() {
@@ -196,6 +203,8 @@ export default class SignUp extends Component {
     });
     const onSubmit = (values, actions) => {
       setTimeout(() => {
+        this.setState({ showToast: true });
+        this.scrollToTop();
         console.log("Form Values:", values);
         const timestamp = new Date().getTime();
         const storageKey = `FORM_DATA`;
@@ -830,7 +839,6 @@ export default class SignUp extends Component {
                 />
 
                 <ListofUser dropdownOptions={dropdownOptions}></ListofUser>
-
                 <button
                   type="submit"
                   className="btn btn-danger w-100 mt-4"
@@ -842,7 +850,26 @@ export default class SignUp extends Component {
                   Already have an account? <Link to="/login">Log In</Link>
                 </p>
               </Container>
-              <pre>{JSON.stringify(values, null, 2)}</pre>
+              {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
+              {/* TOAST MESSAGE */}
+              <Toast
+                show={this.state.showToast}
+                onClose={() => this.setState({ showToast: false })}
+                autohide
+                delay={5000}
+                className="bg-success p-1 fs-6"
+                style={{
+                  position: "absolute",
+                  top: "100px",
+                  right: "50px",
+                }}>
+                <Toast.Body className="text-center">
+                  <strong className="mr-auto text-bg-success ">
+                    Successfully Registered
+                    <FontAwesomeIcon icon={faSmile} className="mx-2" />
+                  </strong>
+                </Toast.Body>
+              </Toast>
             </Form>
           )}
         </Formik>
